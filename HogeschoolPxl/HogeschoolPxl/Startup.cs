@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using HogeschoolPxl.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace HogeschoolPxl
 {
@@ -16,6 +18,7 @@ namespace HogeschoolPxl
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
         }
 
         public IConfiguration Configuration { get; }
@@ -24,6 +27,11 @@ namespace HogeschoolPxl
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddDbContextPool<AppDbContext>(
+                           options => options.UseSqlServer(Configuration.GetConnectionString("PxlConnString"))
+                       );
+
+            services.AddScoped<IPxl, SQLPxlRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
