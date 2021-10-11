@@ -97,7 +97,7 @@ namespace HogeschoolPxl.Data
             {
                 new Inschrijving()
                 {
-                    InchrijvingId = 1,
+                    InschrijvingId = 1,
                     StudentId = 1,
                     VakLectorId = 1,
                     AcademieJaarId = 1
