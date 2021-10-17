@@ -40,10 +40,13 @@
                             <a class="nav-link text-dark" data-link="HomePage" asp-controller="Handboek" asp-action="Index">Handboek</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark"data-link="HomePage" asp-controller="Inschrijving" asp-action="Index">Inschrijving</a>
+                            <a class="nav-link text-dark" data-link="HomePage" asp-controller="Inschrijving" asp-action="Index">Inschrijving</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" data-link="HomePage" asp-controller="AcademieJaar" asp-action="Index">AcademieJaar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" data-link="Portfolio" asp-page="/Portfolio.cshtml">Portfolio</a>
                         </li>
                     </ul>
                 </div>
@@ -65,5 +68,9 @@
     <script src="~/js/Main.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
+    @if (IsSectionDefined("ShowPath"))
+    {
+        @RenderSection("ShowPath", required: true);
+    }
 </body>
 </html>

@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
+using HogeschoolPxl.ViewModels;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+
 namespace HogeschoolPxl.Controllers
 {
 
@@ -14,9 +18,12 @@ namespace HogeschoolPxl.Controllers
     {
         private readonly AppDbContext _context;
 
-        public HandboekController(AppDbContext context)
+        public IWebHostEnvironment hostingEnvironment { get; }
+
+        public HandboekController(AppDbContext context, IWebHostEnvironment hostingEnvironment)
         {
             _context = context;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         // GET: Handboek
@@ -54,31 +61,64 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("HandboekId,Title,KostPrijs,UitGifteDatum,Afbeelding")] Handboek handboek)
+        public IActionResult Create(HandboekCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
+                string uniqueFileName = ProcessUploadedFile(model);
+                Handboek handboek = new Handboek()
+                {
+                    Title = model.Title,
+                    KostPrijs = model.KostPrijs,
+                    UitGifteDatum = model.UitGifteDatum,
+                    Afbeelding = uniqueFileName,
+                };
                 _context.Add(handboek);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.SaveChanges();
+                return RedirectToAction("index");
             }
-            return View(handboek);
+            return View();
+        }
+        private string ProcessUploadedFile(HandboekCreateViewModel model)
+        {
+            string uniqueFileName = null;
+            if (model.Photo != null)
+            {
+                string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                //upload de image file to the server (images folder)
+                using (FileStream fs = new FileStream(filePath, FileMode.Create))
+                {
+                    model.Photo.CopyTo(fs);
+                }
+            }
+            return uniqueFileName;
         }
 
         // GET: Handboek/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var handboek = await _context.handboeken.FindAsync(id);
+            var handboek =  _context.handboeken.Find(id);
             if (handboek == null)
             {
                 return NotFound();
             }
-            return View(handboek);
+            HandboekEditViewModel handboekEditViewModel = new HandboekEditViewModel()
+            {
+                HelperId = handboek.HandboekId,
+                Title = handboek.Title,
+                KostPrijs = handboek.KostPrijs,
+                UitGifteDatum = handboek.UitGifteDatum,
+                ExistingPhotoPath = handboek.Afbeelding
+            };
+            return View(handboekEditViewModel);
         }
 
         // POST: Handboek/Edit/5
@@ -86,34 +126,31 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("HandboekId,Title,KostPrijs,UitGifteDatum,Afbeelding")] Handboek handboek)
+        public IActionResult Edit(HandboekEditViewModel model)
         {
-            if (id != handboek.HandboekId)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                Handboek handboek = _context.handboeken.Find(model.HelperId);
+
+                handboek.Title = model.Title;
+                handboek.KostPrijs = model.KostPrijs;
+                handboek.UitGifteDatum = model.UitGifteDatum;
+                handboek.Afbeelding = model.ExistingPhotoPath;
+                if (model.Photo != null)
                 {
-                    _context.Update(handboek);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!HandboekExists(handboek.HandboekId))
+                    if (model.ExistingPhotoPath != null)
                     {
-                        return NotFound();
+                        //delete existing photo
+                        string filePath = Path.Combine(hostingEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
+                        System.IO.File.Delete(filePath);
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    handboek.Afbeelding = ProcessUploadedFile(model);
                 }
-                return RedirectToAction(nameof(Index));
+                _context.handboeken.Update(handboek);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
-            return View(handboek);
+            return View(model);
         }
 
         // GET: Handboek/Delete/5

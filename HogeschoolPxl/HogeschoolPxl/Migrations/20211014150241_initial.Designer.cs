@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HogeschoolPxl.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211009163410_InitialSeedData")]
-    partial class InitialSeedData
+    [Migration("20211014150241_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,13 +34,6 @@ namespace HogeschoolPxl.Migrations
                     b.HasKey("AcademieJaarId");
 
                     b.ToTable("AcademieJaaren");
-
-                    b.HasData(
-                        new
-                        {
-                            AcademieJaarId = 1,
-                            StartDatum = new DateTime(2021, 10, 9, 18, 34, 9, 739, DateTimeKind.Local).AddTicks(8769)
-                        });
                 });
 
             modelBuilder.Entity("HogeschoolPxl.Models.Gebruiker", b =>
@@ -65,22 +58,6 @@ namespace HogeschoolPxl.Migrations
                     b.HasKey("GebruikerId");
 
                     b.ToTable("Gebruikers");
-
-                    b.HasData(
-                        new
-                        {
-                            GebruikerId = 1,
-                            Email = "mbark.bakkar@pxl.be",
-                            Naam = "Bakkar",
-                            VoorNaam = "Mbark"
-                        },
-                        new
-                        {
-                            GebruikerId = 2,
-                            Email = "Kristof.Palmaers@pxl.be",
-                            Naam = "Palmaers",
-                            VoorNaam = "Kristof"
-                        });
                 });
 
             modelBuilder.Entity("HogeschoolPxl.Models.Handboek", b =>
@@ -106,15 +83,6 @@ namespace HogeschoolPxl.Migrations
                     b.HasKey("HandboekId");
 
                     b.ToTable("handboeken");
-
-                    b.HasData(
-                        new
-                        {
-                            HandboekId = 1,
-                            KostPrijs = 30.0,
-                            Title = "C# Web 1",
-                            UitGifteDatum = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        });
                 });
 
             modelBuilder.Entity("HogeschoolPxl.Models.Inschrijving", b =>
@@ -136,15 +104,6 @@ namespace HogeschoolPxl.Migrations
                     b.HasKey("InschrijvingId");
 
                     b.ToTable("Inschrijvingen");
-
-                    b.HasData(
-                        new
-                        {
-                            InschrijvingId = 1,
-                            AcademieJaarId = 1,
-                            StudentId = 1,
-                            VakLectorId = 1
-                        });
                 });
 
             modelBuilder.Entity("HogeschoolPxl.Models.Lector", b =>
@@ -160,13 +119,6 @@ namespace HogeschoolPxl.Migrations
                     b.HasKey("LectorId");
 
                     b.ToTable("Lectoren");
-
-                    b.HasData(
-                        new
-                        {
-                            LectorId = 1,
-                            GebruikerId = 2
-                        });
                 });
 
             modelBuilder.Entity("HogeschoolPxl.Models.Student", b =>
@@ -182,13 +134,6 @@ namespace HogeschoolPxl.Migrations
                     b.HasKey("StudentId");
 
                     b.ToTable("students");
-
-                    b.HasData(
-                        new
-                        {
-                            StudentId = 1,
-                            GebruikerId = 1
-                        });
                 });
 
             modelBuilder.Entity("HogeschoolPxl.Models.Vak", b =>
@@ -210,15 +155,6 @@ namespace HogeschoolPxl.Migrations
                     b.HasKey("VakId");
 
                     b.ToTable("Vakken");
-
-                    b.HasData(
-                        new
-                        {
-                            VakId = 1,
-                            HandboekId = 1,
-                            Studiepunten = 5,
-                            VakNaam = "C# Web"
-                        });
                 });
 
             modelBuilder.Entity("HogeschoolPxl.Models.VakLector", b =>
@@ -228,23 +164,15 @@ namespace HogeschoolPxl.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("GebruikerId")
+                    b.Property<int>("LectorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("LectorId")
+                    b.Property<int>("VakId")
                         .HasColumnType("int");
 
                     b.HasKey("VakLectorId");
 
                     b.ToTable("VakLectoren");
-
-                    b.HasData(
-                        new
-                        {
-                            VakLectorId = 1,
-                            GebruikerId = 1,
-                            LectorId = 1
-                        });
                 });
 #pragma warning restore 612, 618
         }

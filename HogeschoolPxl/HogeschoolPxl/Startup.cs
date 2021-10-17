@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using HogeschoolPxl.Data;
 using Microsoft.EntityFrameworkCore;
+using HogeschoolPxl.Data.Default;
 
 namespace HogeschoolPxl
 {
@@ -18,7 +19,6 @@ namespace HogeschoolPxl
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
         }
 
         public IConfiguration Configuration { get; }
@@ -31,7 +31,7 @@ namespace HogeschoolPxl
                            options => options.UseSqlServer(Configuration.GetConnectionString("PxlConnString"))
                        );
 
-            services.AddScoped<IPxl, MockPxlReository>();
+            services.AddScoped<IPxl, SQLPxlRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,6 +60,7 @@ namespace HogeschoolPxl
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            SeedData.EnsurePopulated(app);
         }
     }
 }

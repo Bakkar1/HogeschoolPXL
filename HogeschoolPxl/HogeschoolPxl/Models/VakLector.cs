@@ -9,6 +9,6 @@ namespace HogeschoolPxl.Models
     {
         public int VakLectorId { get; set; }
         public int LectorId { get; set; }
-        public int GebruikerId { get; set; }
+        public int VakId { get; set; }
     }
 }

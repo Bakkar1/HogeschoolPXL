@@ -73,7 +73,7 @@ namespace HogeschoolPxl.Data
                 {
                     VakLectorId = 1,
                     LectorId = 1,
-                    GebruikerId = 1
+                    VakId = 1
                 }
             };
             Studenten = new List<Student>()

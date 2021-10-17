@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HogeschoolPxl.Migrations
 {
-    public partial class InitialSeedData : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -114,56 +114,12 @@ namespace HogeschoolPxl.Migrations
                     VakLectorId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     LectorId = table.Column<int>(nullable: false),
-                    GebruikerId = table.Column<int>(nullable: false)
+                    VakId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_VakLectoren", x => x.VakLectorId);
                 });
-
-            migrationBuilder.InsertData(
-                table: "AcademieJaaren",
-                columns: new[] { "AcademieJaarId", "StartDatum" },
-                values: new object[] { 1, new DateTime(2021, 10, 9, 18, 34, 9, 739, DateTimeKind.Local).AddTicks(8769) });
-
-            migrationBuilder.InsertData(
-                table: "Gebruikers",
-                columns: new[] { "GebruikerId", "Email", "Naam", "VoorNaam" },
-                values: new object[,]
-                {
-                    { 1, "mbark.bakkar@pxl.be", "Bakkar", "Mbark" },
-                    { 2, "Kristof.Palmaers@pxl.be", "Palmaers", "Kristof" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Inschrijvingen",
-                columns: new[] { "InschrijvingId", "AcademieJaarId", "StudentId", "VakLectorId" },
-                values: new object[] { 1, 1, 1, 1 });
-
-            migrationBuilder.InsertData(
-                table: "Lectoren",
-                columns: new[] { "LectorId", "GebruikerId" },
-                values: new object[] { 1, 2 });
-
-            migrationBuilder.InsertData(
-                table: "VakLectoren",
-                columns: new[] { "VakLectorId", "GebruikerId", "LectorId" },
-                values: new object[] { 1, 1, 1 });
-
-            migrationBuilder.InsertData(
-                table: "Vakken",
-                columns: new[] { "VakId", "HandboekId", "Studiepunten", "VakNaam" },
-                values: new object[] { 1, 1, 5, "C# Web" });
-
-            migrationBuilder.InsertData(
-                table: "handboeken",
-                columns: new[] { "HandboekId", "Afbeelding", "KostPrijs", "Title", "UitGifteDatum" },
-                values: new object[] { 1, null, 30.0, "C# Web 1", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) });
-
-            migrationBuilder.InsertData(
-                table: "students",
-                columns: new[] { "StudentId", "GebruikerId" },
-                values: new object[] { 1, 1 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
