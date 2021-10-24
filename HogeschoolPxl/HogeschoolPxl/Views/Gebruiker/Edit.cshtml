@@ -1,7 +1,8 @@
-﻿@model HogeschoolPxl.Models.Gebruiker
+﻿@model GebruikerEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
+    var photoPath = "/images/" + (Model.ExistingPhotoPath ?? "NoBoek.jpeg");
 }
 
 <h1>Edit</h1>
@@ -10,7 +11,9 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form enctype="multipart/form-data" asp-action="Edit" method="post">
+            <input hidden asp-for="HelperId" />
+            <input hidden asp-for="ExistingPhotoPath" />
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="GebruikerId" />
             <div class="form-group">
@@ -29,6 +32,18 @@
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Photo"></label>
+                <div>
+                    <div class="custom-file">
+                        <input asp-for="Photo" class="form-control custom-file-input" />
+                        <label class="custom-file-label">Click here to change photo</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <img src="@photoPath" asp-append-version="true" style="height:200px;width:auto;" />
+            </div>
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
@@ -41,4 +56,7 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+@section ShowPath{
+    <script src="~/js/ShowPath.js"></script>
 }

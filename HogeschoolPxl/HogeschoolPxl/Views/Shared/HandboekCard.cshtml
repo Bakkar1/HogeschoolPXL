@@ -1,0 +1,17 @@
+﻿@model Handboek
+
+@{var photoPath = "/images/" + (Model.Afbeelding ?? "NoBoek.jpeg");}
+
+<div class="card" style="width: 18rem;">
+    <img src="@photoPath" class="card-img-top" alt="@Model.Title">
+    <div class="card-body">
+        <h3>@Model.Title</h3>
+        <h5 class="card-title">@Model.KostPrijs$</h5>
+        <p class="card-text">@Model.UitGifteDatum</p>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.HandboekId" class="btn btn-primary">Edit</a>
+            <a asp-action="Details" asp-route-id="@Model.HandboekId" class="btn btn-info">Details</a>
+            <a asp-action="Delete" asp-route-id="@Model.HandboekId" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
+</div>

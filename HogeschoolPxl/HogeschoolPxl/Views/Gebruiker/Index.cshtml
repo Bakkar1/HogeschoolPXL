@@ -3,79 +3,17 @@
 @{
     ViewData["Title"] = "Gebruikers";
 }
-
-<h1>Index</h1>
+@section GebruikerStyle{
+    <link rel="stylesheet" href="~/css/Gebruiker.css" />
+}
+<h1>Gebruikers</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-@*<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Naam)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VoorNaam)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Naam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VoorNaam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.GebruikerId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.GebruikerId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.GebruikerId">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>*@
-
 <div class="custom-container">
-    @foreach (var item in Model)
+    @foreach (Gebruiker gebruiker in Model)
     {
-        <div style="width: 300px">
-            <div class="card text-white card-has-bg click-col"
-                 style=" background-image: url('https://www.pxl.be/Assets/website/pxl_algemeen/afbeeldingen/x-factor.jpg'); ">
-                <img class="card-img d-none"
-                     src="https://source.unsplash.com/600x900/?tech,street"
-                     alt="Avatar" />
-                <div class="card-img-overlay d-flex flex-column">
-                    <div class="card-body">
-                        <div class="media">
-                            <img class="mr-3 rounded-circle"
-                                 src="https://cdn0.iconfinder.com/data/icons/user-pictures/100/male-512.png"
-                                 alt="Generic placeholder image"
-                                 style="max-width: 50px" />
-                            <div class="media-body">
-                                <h6 class="my-0 text-white d-block">@item.Naam</h6>
-                                <small>@item.VoorNaam</small>
-                            </div>
-                        </div>
-                        <div>
-                            <a asp-action="Edit" asp-route-id="@item.GebruikerId" class="btn btn-primary">Edit</a>
-                            <a asp-action="Details" asp-route-id="@item.GebruikerId" class="btn btn-info">Details</a>
-                            <a asp-action="Delete" asp-route-id="@item.GebruikerId" class="btn btn-danger">Delete</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <partial name="GebruikerCard" model="@gebruiker"/>
     }
 </div>

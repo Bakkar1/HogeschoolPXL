@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HogeschoolPxl.Data
 {
-    public class MockPxlReository : IPxl
+    public class MockPxlReository
     {
         public List<Gebruiker> Gebruikers;
         public List<Vak> Vakken;

@@ -58,6 +58,21 @@ namespace HogeschoolPxl.Controllers
         {
             if (ModelState.IsValid)
             {
+                Student std = _context.students.Find(inschrijving.StudentId);
+                if(std == null) ModelState.AddModelError("", $"We could not find a student with id : {inschrijving.StudentId}");
+
+                VakLector vakL =  _context.VakLectoren
+                    .Include(i => i.Vak)
+                    .Where(i => i.VakLectorId == inschrijving.VakLectorId)
+                    .FirstOrDefault();
+                if (vakL == null) ModelState.AddModelError("", $"We could not find a vak lector with id : {inschrijving.VakLectorId}");
+
+                AcademieJaar academie =  _context.AcademieJaaren.Find(inschrijving.AcademieJaarId);
+
+                if (academie == null) ModelState.AddModelError("", $"We could not find an acadieme jaar with id : {inschrijving.AcademieJaarId}");
+
+                if (std == null || vakL == null || academie ==null) return View(inschrijving);
+
                 _context.Add(inschrijving);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

@@ -16,5 +16,9 @@ namespace HogeschoolPxl.Models
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+        public string ImageUrl { get; set; }
+
+        public ICollection<Lector> lectoren { get; set; }
+        public ICollection<Student> Studenten { get; set; }
     }
 }

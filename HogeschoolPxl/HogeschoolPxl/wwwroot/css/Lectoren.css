@@ -1,0 +1,185 @@
+﻿/* start getuigenissen */
+.lectoren {
+    --default-transition: all .5s ease-in-out;
+}
+
+    .lectoren div {
+        flex-wrap: wrap;
+    }
+
+        .lectoren div section {
+            background-color: rgb(249, 249, 249);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-self: center;
+            padding: 30px 0;
+            transition: var(--default-transition);
+            overflow: hidden;
+            border-radius: 10px;
+            margin: 10px;
+        }
+
+            .lectoren div section img {
+                width: 200px;
+                height: 200px;
+                max-width: 100%;
+                max-height: 100%;
+                border-radius: 50%;
+                transition: var(--default-transition);
+            }
+
+            .lectoren div section span {
+                text-transform: capitalize;
+                position: relative;
+                margin: 20px 0;
+            }
+
+                .lectoren div section span::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -5px;
+                    left: 0;
+                    width: 100%;
+                    height: 2px;
+                    background-color: var(--main-color);
+                    transition: var(--default-transition);
+                }
+
+            .lectoren div section a i {
+                width: 30px;
+                height: 30px;
+                line-height: 30px;
+                border-radius: 50%;
+                text-align: center;
+                transition: var(--default-transition);
+            }
+
+            .lectoren div section .links a:not(:last-of-type) {
+                margin-right: 5px;
+            }
+
+@media screen and ( max-width : 767px), (min-width : 768px) and (max-width : 992px) {
+    .lectoren div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+        .lectoren div section {
+            width: 80%;
+            margin-bottom: 20px;
+        }
+
+            .lectoren div section:first-of-type {
+                order: 3;
+            }
+
+            .lectoren div section:nth-of-type(2) {
+                order: 1;
+            }
+
+            .lectoren div section:nth-of-type(3) {
+                order: 2;
+            }
+
+            .lectoren div section img {
+                box-shadow: 0 0px 0px 400px rgba(102,175,233,.6);
+            }
+
+            .lectoren div section span::after {
+                transform: scaleX(1.2);
+            }
+
+            .lectoren div section a i {
+                background-color: var(--blue-color);
+                border: 1px solid var(--blue-color);
+                color: var(--default-color);
+            }
+
+            .lectoren div section a:hover i {
+                background-color: transparent;
+                border: 1px solid var(--blue-color);
+                color: var(--blue-color);
+            }
+}
+
+@media screen and (min-width : 768px) and (max-width : 992px) {
+    .lectoren div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        flex-wrap: wrap;
+    }
+
+        .lectoren div section {
+            width: calc(98% / 3);
+        }
+
+            .lectoren div section:first-of-type {
+                margin: 0 20% 2%;
+            }
+
+            .lectoren div section:nth-of-type(2) {
+                margin-right: 2%;
+            }
+}
+
+@media screen and (min-width : 992px) {
+    .lectoren div {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+        .lectoren div section {
+            width: calc(96% / 4);
+            filter: grayscale();
+        }
+
+            .lectoren div section:not(:last-child) {
+                margin-right: 2%;
+            }
+
+            .lectoren div section:hover {
+                transform: translateY(-15px);
+                filter: none;
+            }
+
+            .lectoren div section img {
+                transition: box-shadow 2s;
+            }
+
+            .lectoren div section:hover img {
+                box-shadow: 0 0px 0px 400px rgba(102,175,233,.6);
+            }
+
+            .lectoren div section span::after {
+                transform: scaleX(0);
+            }
+
+            .lectoren div section:hover span::after {
+                transform: scaleX(1.2);
+            }
+
+            .lectoren div section a i {
+                background-color: transparent;
+                border: 1px solid var(--blue-color);
+                color: var(--blue-color);
+            }
+
+            .lectoren div section:hover a i {
+                background-color: var(--blue-color);
+                border: 1px solid var(--blue-color);
+                color: var(--default-color);
+            }
+
+            .lectoren div section:hover a:hover i {
+                background-color: transparent;
+                border: 1px solid var(--blue-color);
+                color: var(--blue-color);
+            }
+}
+
+@media screen and (min-width : 1200px) {
+}
+/* end getuigenissen */

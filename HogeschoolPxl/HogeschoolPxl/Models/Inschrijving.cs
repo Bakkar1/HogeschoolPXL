@@ -9,7 +9,10 @@ namespace HogeschoolPxl.Models
     {
         public int InschrijvingId { get; set; }
         public int StudentId { get; set; }
+        public Student Student { get; set; }
         public int VakLectorId { get; set; }
+        public VakLector VakLector { get; set; }
         public int AcademieJaarId { get; set; }
+        public AcademieJaar AcademieJaar { get; set; }
     }
 }

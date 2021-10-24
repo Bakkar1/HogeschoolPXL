@@ -13,10 +13,12 @@ namespace HogeschoolPxl.Controllers
     public class VakController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IPxl iPxl;
 
-        public VakController(AppDbContext context)
+        public VakController(AppDbContext context, IPxl iPxl)
         {
             _context = context;
+            this.iPxl = iPxl;
         }
 
         // GET: Vak
@@ -58,6 +60,11 @@ namespace HogeschoolPxl.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (iPxl.GetHandboek(vak.HandboekId) == null)
+                {
+                    ModelState.AddModelError("", $"Handboek With id {vak.HandboekId} does not exist !");
+                    return View();
+                }
                 _context.Add(vak);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

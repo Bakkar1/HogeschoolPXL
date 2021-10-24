@@ -1,28 +1,15 @@
-﻿@model IEnumerable<HogeschoolPxl.Models.Handboek>
+﻿@model IEnumerable<Handboek>
 
 @{
-    ViewData["Title"] = "Boeken";
+    ViewData["Title"] = "Handboeken";
 }
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
 <div class="boeken custom-container">
-    @foreach (var item in Model)
+    @foreach (Handboek handboek in Model)
     {
-        var photoPath = "/images/" + (item.Afbeelding ?? "NoBoek.jpeg");
-        <div class="card" style="width: 18rem;">
-            <img src="@photoPath" class="card-img-top" alt="@item.Title">
-            <div class="card-body">
-                <h3>@item.Title</h3>
-                <h5 class="card-title">@item.KostPrijs$</h5>
-                <p class="card-text">@item.UitGifteDatum</p>
-                <div>
-                    <a asp-action="Edit" asp-route-id="@item.HandboekId" class="btn btn-primary">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.HandboekId" class="btn btn-info">Details</a>
-                    <a asp-action="Delete" asp-route-id="@item.HandboekId" class="btn btn-danger">Delete</a>
-                </div>
-            </div>
-        </div>
+        <partial name="HandboekCard" model="@handboek" />
     }
 </div>

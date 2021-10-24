@@ -10,6 +10,7 @@ using HogeschoolPxl.Models;
 using HogeschoolPxl.ViewModels;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using HogeschoolPxl.Helpers;
 
 namespace HogeschoolPxl.Controllers
 {
@@ -17,19 +18,21 @@ namespace HogeschoolPxl.Controllers
     public class HandboekController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IPxl iPxl;
 
         public IWebHostEnvironment hostingEnvironment { get; }
 
-        public HandboekController(AppDbContext context, IWebHostEnvironment hostingEnvironment)
+        public HandboekController(AppDbContext context, IWebHostEnvironment hostingEnvironment, IPxl iPxl)
         {
             _context = context;
             this.hostingEnvironment = hostingEnvironment;
+            this.iPxl = iPxl;
         }
 
         // GET: Handboek
         public async Task<IActionResult> Index()
         {
-            return View(await _context.handboeken.ToListAsync());
+            return View(await iPxl.GetHandboeken());
         }
 
         // GET: Handboek/Details/5
@@ -37,14 +40,13 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundEr", "Error", new { categorie = "Handboek" });
             }
 
-            var handboek = await _context.handboeken
-                .FirstOrDefaultAsync(m => m.HandboekId == id);
+            var handboek = await iPxl.DetailsHandboek(id);
             if (handboek == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundEr", "Error", new { id = id, categorie = "Handboek" });
             }
 
             return View(handboek);
@@ -61,11 +63,12 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(HandboekCreateViewModel model)
+        public async Task<IActionResult> Create(HandboekCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
-                string uniqueFileName = ProcessUploadedFile(model);
+                FotoHelper ft = new FotoHelper(hostingEnvironment);
+                string uniqueFileName = ft.ProcessUploadedFile(model);
                 Handboek handboek = new Handboek()
                 {
                     Title = model.Title,
@@ -73,28 +76,12 @@ namespace HogeschoolPxl.Controllers
                     UitGifteDatum = model.UitGifteDatum,
                     Afbeelding = uniqueFileName,
                 };
-                _context.Add(handboek);
-                _context.SaveChanges();
+                //_context.Add(handboek);
+                //_context.SaveChanges();
+                await iPxl.AddHandboek(handboek);
                 return RedirectToAction("index");
             }
             return View();
-        }
-        private string ProcessUploadedFile(HandboekCreateViewModel model)
-        {
-            string uniqueFileName = null;
-            if (model.Photo != null)
-            {
-                string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                //upload de image file to the server (images folder)
-                using (FileStream fs = new FileStream(filePath, FileMode.Create))
-                {
-                    model.Photo.CopyTo(fs);
-                }
-            }
-            return uniqueFileName;
         }
 
         // GET: Handboek/Edit/5
@@ -102,13 +89,13 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundEr", "Error", new { categorie = "Handboek" });
             }
 
             var handboek =  _context.handboeken.Find(id);
             if (handboek == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundEr", "Error", new { id = id, categorie = "Handboek" });
             }
             HandboekEditViewModel handboekEditViewModel = new HandboekEditViewModel()
             {
@@ -144,7 +131,9 @@ namespace HogeschoolPxl.Controllers
                         string filePath = Path.Combine(hostingEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
                         System.IO.File.Delete(filePath);
                     }
-                    handboek.Afbeelding = ProcessUploadedFile(model);
+                    FotoHelper ft = new FotoHelper(hostingEnvironment);
+                    handboek.Afbeelding = ft.ProcessUploadedFile(model);
+                    //handboek.Afbeelding = ProcessUploadedFile(model);
                 }
                 _context.handboeken.Update(handboek);
                 _context.SaveChanges();
@@ -158,14 +147,14 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundEr", "Error", new { categorie = "Handboek" });
             }
 
             var handboek = await _context.handboeken
                 .FirstOrDefaultAsync(m => m.HandboekId == id);
             if (handboek == null)
             {
-                return NotFound();
+                return RedirectToAction("NotFoundEr", "Error", new { id = id, categorie = "Handboek" });
             }
 
             return View(handboek);
@@ -179,6 +168,10 @@ namespace HogeschoolPxl.Controllers
             var handboek = await _context.handboeken.FindAsync(id);
             _context.handboeken.Remove(handboek);
             await _context.SaveChangesAsync();
+            //delete existing photo
+            string filePath = Path.Combine(hostingEnvironment.WebRootPath, "images", handboek.Afbeelding);
+            System.IO.File.Delete(filePath);
+
             return RedirectToAction(nameof(Index));
         }
 

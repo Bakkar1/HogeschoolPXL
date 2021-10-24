@@ -7,6 +7,15 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/Main.css" />
+    
+    @if (IsSectionDefined("GebruikerStyle"))
+    {
+        @RenderSection("GebruikerStyle", required: true);
+    }
+    @if (IsSectionDefined("LectorenStyle"))
+    {
+        @RenderSection("LectorenStyle", required: true);
+    }
 </head>
 <body>
     <header class="bg-light">
@@ -28,25 +37,25 @@
                             <a class="nav-link text-dark" data-link="Vakken" asp-controller="Vak" asp-action="Index">Vak</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" data-link="Homesdf" asp-controller="Lector" asp-action="Index">Lector</a>
+                            <a class="nav-link text-dark" data-link="Lectoren" asp-controller="Lector" asp-action="Index">Lector</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" data-link="Homdfe Page" asp-controller="VakLector" asp-action="Index">VakLector</a>
+                            <a class="nav-link text-dark" data-link="VakLectoren" asp-controller="VakLector" asp-action="Index">VakLector</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" data-link="HomesdfPage" asp-controller="Student" asp-action="Index">Studenten</a>
+                            <a class="nav-link text-dark" data-link="Studenten" asp-controller="Student" asp-action="Index">Studenten</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" data-link="HomePage" asp-controller="Handboek" asp-action="Index">Handboek</a>
+                            <a class="nav-link text-dark" data-link="Handboeken" asp-controller="Handboek" asp-action="Index">Handboek</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" data-link="HomePage" asp-controller="Inschrijving" asp-action="Index">Inschrijving</a>
+                            <a class="nav-link text-dark" data-link="Inschrijvingen" asp-controller="Inschrijving" asp-action="Index">Inschrijving</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" data-link="HomePage" asp-controller="AcademieJaar" asp-action="Index">AcademieJaar</a>
+                            <a class="nav-link text-dark" data-link="AcademieJaren" asp-controller="AcademieJaar" asp-action="Index">AcademieJaar</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" data-link="Portfolio" asp-page="/Portfolio.cshtml">Portfolio</a>
+                            <a class="nav-link text-dark" data-link="Portfolio" href="~/Pages/Portfolio.cshtml">Portfolio</a>
                         </li>
                     </ul>
                 </div>

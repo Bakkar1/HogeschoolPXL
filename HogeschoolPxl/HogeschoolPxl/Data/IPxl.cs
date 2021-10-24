@@ -11,5 +11,11 @@ namespace HogeschoolPxl.Data
         //Task<IEnumerable<Student>> GetStudents();
         Task<IEnumerable<Gebruiker>> GetGebruikersAsync();
         IEnumerable<Gebruiker> GetGebruikers();
+
+
+        Task<IEnumerable<Handboek>> GetHandboeken();
+        Handboek GetHandboek(int id);
+        Task<Handboek> DetailsHandboek(int? id);
+        Task<Handboek> AddHandboek(Handboek handboek);
     }
 }

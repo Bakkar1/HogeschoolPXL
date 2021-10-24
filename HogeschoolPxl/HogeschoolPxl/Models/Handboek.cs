@@ -18,5 +18,6 @@ namespace HogeschoolPxl.Models
         [UitgifteDatum]
         public DateTime UitGifteDatum { get; set; }
         public string Afbeelding { get; set; }
+        public ICollection<Vak> Vakken { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HogeschoolPxl.Data
 {
-    public class SQLPxlRepository : IPxl
+    public class SQLPxlRepository
     {
         private readonly AppDbContext _context;
         public SQLPxlRepository(AppDbContext context)
@@ -31,6 +31,11 @@ namespace HogeschoolPxl.Data
         public IEnumerable<Student> GetStudents()
         {
             throw new NotImplementedException();
+        }
+
+        public Handboek GetHandboek(int id)
+        {
+            return _context.handboeken.Find(id);
         }
     }
 }
