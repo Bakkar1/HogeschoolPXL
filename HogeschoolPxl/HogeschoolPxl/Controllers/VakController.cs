@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
+using HogeschoolPxl.Helpers;
 
 namespace HogeschoolPxl.Controllers
 {
@@ -155,6 +156,14 @@ namespace HogeschoolPxl.Controllers
         private bool VakExists(int id)
         {
             return _context.Vakken.Any(e => e.VakId == id);
+        }
+        private RedirectToActionResult RedirecToNotFound()
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { categorie = "Vak" });
+        }
+        private RedirectToActionResult RedirecToNotFound(int? id = 0)
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { id, categorie = "Vak" });
         }
     }
 }

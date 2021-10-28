@@ -7,16 +7,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
+using HogeschoolPxl.ViewModels;
+using HogeschoolPxl.Helpers;
 
 namespace HogeschoolPxl.Controllers
 {
     public class LectorController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IPxl iPxl;
 
-        public LectorController(AppDbContext context)
+        public LectorController(AppDbContext context, IPxl iPxl)
         {
             _context = context;
+            this.iPxl = iPxl;
         }
 
         // GET: Lector
@@ -44,9 +48,13 @@ namespace HogeschoolPxl.Controllers
         }
 
         // GET: Lector/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            LectorCreateViewModel model = new LectorCreateViewModel()
+            {
+                Gebruikers = await iPxl.GetGebruikers()
+            };
+            return View(model);
         }
 
         // POST: Lector/Create
@@ -54,15 +62,26 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LectorId,GebruikerId")] Lector lector)
+        public async Task<IActionResult> Create( LectorCreateViewModel model)
         {
+            model.Gebruikers = await iPxl.GetGebruikers();
             if (ModelState.IsValid)
             {
+                var CheckLector = _context.Lectoren.Where(l => l.GebruikerId == model.GebruikerId).FirstOrDefault();
+                if(CheckLector != null)
+                {
+                    ModelState.AddModelError("", $"Lector with gebruiker id {model.GebruikerId} alredy exist");
+                    return View(model);
+                }
+                Lector lector = new Lector()
+                {
+                    GebruikerId = model.GebruikerId
+                };
                 _context.Add(lector);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(lector);
+            return View(model);
         }
 
         // GET: Lector/Edit/5
@@ -148,6 +167,14 @@ namespace HogeschoolPxl.Controllers
         private bool LectorExists(int id)
         {
             return _context.Lectoren.Any(e => e.LectorId == id);
+        }
+        private RedirectToActionResult RedirecToNotFound()
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { categorie = "Lector" });
+        }
+        private RedirectToActionResult RedirecToNotFound(int? id = 0)
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { id, categorie = "Lector" });
         }
     }
 }

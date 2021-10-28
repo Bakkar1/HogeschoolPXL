@@ -7,22 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
+using HogeschoolPxl.Helpers;
 
 namespace HogeschoolPxl.Controllers
 {
     public class InschrijvingController : Controller
     {
+        private readonly IPxl ipxl;
         private readonly AppDbContext _context;
 
-        public InschrijvingController(AppDbContext context)
+        public InschrijvingController(IPxl ipxl, AppDbContext context)
         {
+            this.ipxl = ipxl;
             _context = context;
         }
 
         // GET: Inschrijving
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Inschrijvingen.ToListAsync());
+            return View(await ipxl.GetInschrijvingen());
         }
 
         // GET: Inschrijving/Details/5
@@ -33,8 +36,7 @@ namespace HogeschoolPxl.Controllers
                 return NotFound();
             }
 
-            var inschrijving = await _context.Inschrijvingen
-                .FirstOrDefaultAsync(m => m.InschrijvingId == id);
+            var inschrijving = await ipxl.GetInschrijving(id);
             if (inschrijving == null)
             {
                 return NotFound();
@@ -163,6 +165,14 @@ namespace HogeschoolPxl.Controllers
         private bool InschrijvingExists(int id)
         {
             return _context.Inschrijvingen.Any(e => e.InschrijvingId == id);
+        }
+        private RedirectToActionResult RedirecToNotFound()
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { categorie = "Inschrijving" });
+        }
+        private RedirectToActionResult RedirecToNotFound(int? id = 0)
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { id, categorie = "Inschrijving" });
         }
     }
 }

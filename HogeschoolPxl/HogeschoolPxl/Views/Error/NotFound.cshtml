@@ -11,13 +11,13 @@
 
         <div class="col-md-12">
             <h1><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> 404</h1>
-            @if (Model.id == null)
+            @if (Model.Id == null)
             {
-        <h2>Oops... We kan not find @Model.categorie without @Model.categorie  number</h2>
+                <h2>Oops... We kan not find @Model.Categorie without @Model.Categorie  number</h2>
             }
             else
             {
-                <h2>Oops... We could not found @Model.categorie with id : @Model.id </h2>
+                <h2>Oops... We could not found @Model.Categorie with id : @Model.Id </h2>
             }
             <form>
                 <input type="text" placeholder="Search..." name="search">

@@ -13,8 +13,8 @@ namespace HogeschoolPxl.Controllers
         {
             ErrorInfo errorInfo = new ErrorInfo()
             {
-                id = id,
-                categorie = categorie
+                Id = id,
+                Categorie = categorie
             };
             return View("NotFound", errorInfo);
         }

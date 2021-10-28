@@ -192,5 +192,6 @@ C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolP
 C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\obj\Debug\netcoreapp3.1\HogeschoolPxl.csproj.CopyComplete
 C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\obj\Debug\netcoreapp3.1\HogeschoolPxl.genruntimeconfig.cache
 C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\obj\Debug\netcoreapp3.1\HogeschoolPxl.csproj.AssemblyReference.cache
-C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\obj\Debug\netcoreapp3.1\Razor\Pages\Shared\Portfolio.cshtml.g.cs
-C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\obj\Debug\netcoreapp3.1\Razor\Pages\tst.cshtml.g.cs
+C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\obj\Debug\netcoreapp3.1\HogeschoolPxl.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\obj\Debug\netcoreapp3.1\Razor\Views\Shared\StudentCard.cshtml.g.cs
+C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\obj\Debug\netcoreapp3.1\Razor\Pages\Portfolio.cshtml.g.cs

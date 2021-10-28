@@ -16,47 +16,32 @@ namespace HogeschoolPxl.Controllers
 {
     public class GebruikerController : Controller
     {
-        private readonly AppDbContext _context;
-        private readonly IPxl _iPxl;
-        private readonly IWebHostEnvironment hostEnvironment;
+        private readonly IPxl iPxl;
+        private readonly IWebHostEnvironment HostingEnvironment;
 
-        public GebruikerController(AppDbContext context, IPxl iPxl, IWebHostEnvironment hostEnvironment)
+        public GebruikerController(IPxl iPxl, IWebHostEnvironment hostEnvironment)
         {
-            _context = context;
-            _iPxl = iPxl;
-            this.hostEnvironment = hostEnvironment;
+            this.iPxl = iPxl;
+            this.HostingEnvironment = hostEnvironment;
         }
 
-        // GET: Gebruiker
-        //public async Task<IActionResult> Index()
-        //{
-        //    return View(await _context.Gebruikers.ToListAsync());
-
-        //}
 
         public async Task<IActionResult> Index()
         {
-            return View(await _iPxl.GetGebruikersAsync());
+            return View(await iPxl.GetGebruikers());
 
         }
-        //public IActionResult Index()
-        //{
-        //    return View(_iPxl.GetGebruikers());
-
-        //}
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
-                
-                return RedirectToAction("NotFoundEr", "Error", new {categorie = "Gebruiker" });
+                return RedirecToNotFound();
             }
 
-            var gebruiker = await _context.Gebruikers
-                .FirstOrDefaultAsync(m => m.GebruikerId == id);
+            var gebruiker = await iPxl.GetGebruiker(id);
             if (gebruiker == null)
             {
-                return RedirectToAction("NotFoundEr", "Error", new { id = id , categorie = "Gebruiker"});
+                return RedirecToNotFound(id);
             }
 
             return View(gebruiker);
@@ -77,7 +62,7 @@ namespace HogeschoolPxl.Controllers
         {
             if (ModelState.IsValid)
             {
-                FotoHelper ft = new FotoHelper(hostEnvironment);
+                FotoHelper ft = new FotoHelper(HostingEnvironment);
                 string uniqueFileName = ft.ProcessUploadedFile(model);
                 Gebruiker gebruiker = new Gebruiker()
                 {
@@ -87,8 +72,9 @@ namespace HogeschoolPxl.Controllers
                     Email = model.Email,
                     ImageUrl = uniqueFileName
                 };
-                _context.Add(gebruiker);
-                await _context.SaveChangesAsync();
+                //_context.Add(gebruiker);
+                //await _context.SaveChangesAsync();
+                await iPxl.AddGebruiker(gebruiker);
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
@@ -99,13 +85,13 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
-            var gebruiker = await _context.Gebruikers.FindAsync(id);
+            var gebruiker = await iPxl.GetGebruiker(id);
             if (gebruiker == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
             GebruikerEditViewModel gebruikerEditViewModel = new GebruikerEditViewModel()
             {
@@ -127,7 +113,7 @@ namespace HogeschoolPxl.Controllers
         {
             if (ModelState.IsValid)
             {
-                Gebruiker gebruiker = _context.Gebruikers.Find(model.HelperId);
+                Gebruiker gebruiker = await iPxl.GetGebruiker(model.HelperId);
 
                 gebruiker.Naam = model.Naam;
                 gebruiker.VoorNaam = model.VoorNaam;
@@ -139,14 +125,15 @@ namespace HogeschoolPxl.Controllers
                     if (model.ExistingPhotoPath != null)
                     {
                         //delete existing photo
-                        string filePath = Path.Combine(hostEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
+                        string filePath = Path.Combine(HostingEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
                         System.IO.File.Delete(filePath);
                     }
-                    FotoHelper ft = new FotoHelper(hostEnvironment);
+                    FotoHelper ft = new FotoHelper(HostingEnvironment);
                     gebruiker.ImageUrl = ft.ProcessUploadedFile(model);
                 }
-                _context.Gebruikers.Update(gebruiker);
-                await _context.SaveChangesAsync();
+                //_context.Gebruikers.Update(gebruiker);
+                //await _context.SaveChangesAsync();
+                await iPxl.UpdateGebruiker(gebruiker);
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -183,14 +170,13 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
-            var gebruiker = await _context.Gebruikers
-                .FirstOrDefaultAsync(m => m.GebruikerId == id);
+            var gebruiker = await iPxl.GetGebruiker(id);
             if (gebruiker == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
 
             return View(gebruiker);
@@ -201,15 +187,30 @@ namespace HogeschoolPxl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var gebruiker = await _context.Gebruikers.FindAsync(id);
-            _context.Gebruikers.Remove(gebruiker);
-            await _context.SaveChangesAsync();
+            //var gebruiker = await _context.Gebruikers.FindAsync(id);
+            //_context.Gebruikers.Remove(gebruiker);
+            //await _context.SaveChangesAsync();
+
+            Gebruiker gebruiker = await iPxl.DeleteGebruiker(id);
+
+            //delete existing photo
+            string filePath = Path.Combine(HostingEnvironment.WebRootPath, "images", gebruiker.ImageUrl);
+            System.IO.File.Delete(filePath);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GebruikerExists(int id)
+        private async Task<bool> GebruikerExists(int id)
         {
-            return _context.Gebruikers.Any(e => e.GebruikerId == id);
+            Gebruiker gebruiker = await iPxl.GetGebruiker(id);
+            return gebruiker != null;
+        }
+        private RedirectToActionResult RedirecToNotFound()
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { categorie = "Gebruiker" });
+        }
+        private RedirectToActionResult RedirecToNotFound(int? id = 0)
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { id, categorie = "Gebruiker" });
         }
     }
 }

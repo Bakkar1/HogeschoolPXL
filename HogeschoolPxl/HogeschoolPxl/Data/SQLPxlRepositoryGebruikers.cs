@@ -14,17 +14,32 @@ namespace HogeschoolPxl.Data
         {
             _context = context;
         }
-        public IEnumerable<Gebruiker> GetGebruikers()
-        {
-            return _context.Gebruikers;
-        }
-        public async Task<IEnumerable<Gebruiker>> GetGebruikersAsync()
+        public async Task<IEnumerable<Gebruiker>> GetGebruikers()
         {
             return await _context.Gebruikers.ToListAsync();
         }
-        public IEnumerable<Student> GetStudents()
+        public async Task<Gebruiker> GetGebruiker(int? id)
         {
-            throw new NotImplementedException();
+            return await _context.Gebruikers.FindAsync(id);
+        }
+        public async Task<Gebruiker> AddGebruiker(Gebruiker gebruiker)
+        {
+            _context.Gebruikers.Add(gebruiker);
+            await _context.SaveChangesAsync();
+            return gebruiker;
+        }
+        public async Task<Gebruiker> UpdateGebruiker(Gebruiker gebruiker)
+        {
+            _context.Gebruikers.Update(gebruiker);
+            await _context.SaveChangesAsync();
+            return gebruiker;
+        }
+        public async Task<Gebruiker> DeleteGebruiker(int id)
+        {
+            var gebruiker = await _context.Gebruikers.FindAsync(id);
+            _context.Gebruikers.Remove(gebruiker);
+            await _context.SaveChangesAsync();
+            return gebruiker;
         }
     }
 }

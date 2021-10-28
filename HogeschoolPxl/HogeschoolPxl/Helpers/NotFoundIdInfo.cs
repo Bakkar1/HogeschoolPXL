@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace HogeschoolPxl.Helpers
 {
-    public class ErrorInfo
+    public class NotFoundIdInfo
     {
-        public int? Id { get; set; }
-        public string Categorie { get; set; }
+        public static string ActionName = "NotFoundEr";
+        public static string ControllerName = "Error";
     }
 }

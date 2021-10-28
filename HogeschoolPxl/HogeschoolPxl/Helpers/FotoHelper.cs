@@ -16,6 +16,12 @@ namespace HogeschoolPxl.Helpers
         {
             this.hostingEnvironment = hostingEnvironment;
         }
+        public void DeleteExistingPhoto(string uniqueUrl)
+        {
+            //delete existing photo
+            string filePath = Path.Combine(hostingEnvironment.WebRootPath, "images",uniqueUrl);
+            System.IO.File.Delete(filePath);
+        }
         public string ProcessUploadedFile(HandboekCreateViewModel model)
         {
             string uniqueFileName = null;
@@ -26,10 +32,8 @@ namespace HogeschoolPxl.Helpers
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                 //upload de image file to the server (images folder)
-                using (FileStream fs = new FileStream(filePath, FileMode.Create))
-                {
-                    model.Photo.CopyTo(fs);
-                }
+                using FileStream fs = new FileStream(filePath, FileMode.Create);
+                model.Photo.CopyTo(fs);
             }
             return uniqueFileName;
         }
@@ -43,10 +47,8 @@ namespace HogeschoolPxl.Helpers
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                 //upload de image file to the server (images folder)
-                using (FileStream fs = new FileStream(filePath, FileMode.Create))
-                {
-                    model.Photo.CopyTo(fs);
-                }
+                using FileStream fs = new FileStream(filePath, FileMode.Create);
+                model.Photo.CopyTo(fs);
             }
             return uniqueFileName;
         }

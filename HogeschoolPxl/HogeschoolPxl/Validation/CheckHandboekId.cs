@@ -18,7 +18,6 @@ namespace HogeschoolPxl.Validation
         IEnumerable<ModelValidationResult> IModelValidator.Validate(ModelValidationContext context)
         {
             var lst = new List<ModelValidationResult>();
-
             if (int.TryParse(context.Model.ToString(), out int id))
             {
                 if (iPxl.GetHandboek(id) == null)

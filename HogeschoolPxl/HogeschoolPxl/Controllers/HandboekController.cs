@@ -17,15 +17,13 @@ namespace HogeschoolPxl.Controllers
 
     public class HandboekController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly IPxl iPxl;
 
-        public IWebHostEnvironment hostingEnvironment { get; }
+        public IWebHostEnvironment HostingEnvironment { get; }
 
-        public HandboekController(AppDbContext context, IWebHostEnvironment hostingEnvironment, IPxl iPxl)
+        public HandboekController(IWebHostEnvironment HostingEnvironment, IPxl iPxl)
         {
-            _context = context;
-            this.hostingEnvironment = hostingEnvironment;
+            this.HostingEnvironment = HostingEnvironment;
             this.iPxl = iPxl;
         }
 
@@ -40,13 +38,13 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return RedirectToAction("NotFoundEr", "Error", new { categorie = "Handboek" });
+                return RedirecToNotFound();
             }
 
-            var handboek = await iPxl.DetailsHandboek(id);
+            var handboek = await iPxl.GetHandboek(id);
             if (handboek == null)
             {
-                return RedirectToAction("NotFoundEr", "Error", new { id = id, categorie = "Handboek" });
+                return RedirecToNotFound(id);
             }
 
             return View(handboek);
@@ -67,7 +65,7 @@ namespace HogeschoolPxl.Controllers
         {
             if (ModelState.IsValid)
             {
-                FotoHelper ft = new FotoHelper(hostingEnvironment);
+                FotoHelper ft = new FotoHelper(HostingEnvironment);
                 string uniqueFileName = ft.ProcessUploadedFile(model);
                 Handboek handboek = new Handboek()
                 {
@@ -85,17 +83,17 @@ namespace HogeschoolPxl.Controllers
         }
 
         // GET: Handboek/Edit/5
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
-                return RedirectToAction("NotFoundEr", "Error", new { categorie = "Handboek" });
+                return RedirecToNotFound();
             }
 
-            var handboek =  _context.handboeken.Find(id);
+            var handboek = await iPxl.GetHandboek(id);
             if (handboek == null)
             {
-                return RedirectToAction("NotFoundEr", "Error", new { id = id, categorie = "Handboek" });
+                return RedirecToNotFound(id);
             }
             HandboekEditViewModel handboekEditViewModel = new HandboekEditViewModel()
             {
@@ -107,17 +105,13 @@ namespace HogeschoolPxl.Controllers
             };
             return View(handboekEditViewModel);
         }
-
-        // POST: Handboek/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(HandboekEditViewModel model)
+        public async Task<IActionResult> Edit(HandboekEditViewModel model)
         {
             if (ModelState.IsValid)
             {
-                Handboek handboek = _context.handboeken.Find(model.HelperId);
+                Handboek handboek = await iPxl.GetHandboek(model.HelperId);
 
                 handboek.Title = model.Title;
                 handboek.KostPrijs = model.KostPrijs;
@@ -128,15 +122,15 @@ namespace HogeschoolPxl.Controllers
                     if (model.ExistingPhotoPath != null)
                     {
                         //delete existing photo
-                        string filePath = Path.Combine(hostingEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
+                        string filePath = Path.Combine(HostingEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
                         System.IO.File.Delete(filePath);
                     }
-                    FotoHelper ft = new FotoHelper(hostingEnvironment);
+                    FotoHelper ft = new FotoHelper(HostingEnvironment);
                     handboek.Afbeelding = ft.ProcessUploadedFile(model);
-                    //handboek.Afbeelding = ProcessUploadedFile(model);
                 }
-                _context.handboeken.Update(handboek);
-                _context.SaveChanges();
+                //_context.handboeken.Update(handboek);
+                //_context.SaveChanges();
+                await iPxl.UpdateHandboek(handboek);
                 return RedirectToAction("Index");
             }
             return View(model);
@@ -147,14 +141,13 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return RedirectToAction("NotFoundEr", "Error", new { categorie = "Handboek" });
+                RedirecToNotFound();
             }
 
-            var handboek = await _context.handboeken
-                .FirstOrDefaultAsync(m => m.HandboekId == id);
+            var handboek = await iPxl.GetHandboek(id);
             if (handboek == null)
             {
-                return RedirectToAction("NotFoundEr", "Error", new { id = id, categorie = "Handboek" });
+                return RedirecToNotFound(id);
             }
 
             return View(handboek);
@@ -165,19 +158,30 @@ namespace HogeschoolPxl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var handboek = await _context.handboeken.FindAsync(id);
-            _context.handboeken.Remove(handboek);
-            await _context.SaveChangesAsync();
+            //var handboek = await _context.handboeken.FindAsync(id);
+            //_context.handboeken.Remove(handboek);
+            //await _context.SaveChangesAsync();
+            Handboek handboek = await iPxl.DeleteHandboek(id);
+
             //delete existing photo
-            string filePath = Path.Combine(hostingEnvironment.WebRootPath, "images", handboek.Afbeelding);
+            string filePath = Path.Combine(HostingEnvironment.WebRootPath, "images", handboek.Afbeelding);
             System.IO.File.Delete(filePath);
 
             return RedirectToAction(nameof(Index));
         }
 
-        private bool HandboekExists(int id)
+        private async Task<bool> HandboekExists(int id)
         {
-            return _context.handboeken.Any(e => e.HandboekId == id);
+            Handboek handboek = await iPxl.GetHandboek(id);
+            return handboek != null;
+        }
+        private RedirectToActionResult RedirecToNotFound()
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { categorie = "Handboek" });
+        }
+        private RedirectToActionResult RedirecToNotFound(int? id = 0)
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { id, categorie = "Handboek" });
         }
     }
 }

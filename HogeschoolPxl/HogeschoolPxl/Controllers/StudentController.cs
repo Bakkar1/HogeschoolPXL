@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
+using HogeschoolPxl.Helpers;
 
 namespace HogeschoolPxl.Controllers
 {
@@ -22,7 +23,7 @@ namespace HogeschoolPxl.Controllers
         // GET: Student
         public async Task<IActionResult> Index()
         {
-            return View(await _context.students.ToListAsync());
+            return View(await _context.students.Include(s => s.Gebruiker).ToListAsync());
         }
 
         // GET: Student/Details/5
@@ -148,6 +149,14 @@ namespace HogeschoolPxl.Controllers
         private bool StudentExists(int id)
         {
             return _context.students.Any(e => e.StudentId == id);
+        }
+        private RedirectToActionResult RedirecToNotFound()
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { categorie = "Student" });
+        }
+        private RedirectToActionResult RedirecToNotFound(int? id = 0)
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { id, categorie = "Student" });
         }
     }
 }

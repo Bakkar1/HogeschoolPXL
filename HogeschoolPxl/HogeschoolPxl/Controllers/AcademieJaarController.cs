@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
+using HogeschoolPxl.Helpers;
 
 namespace HogeschoolPxl.Controllers
 {
@@ -148,6 +149,14 @@ namespace HogeschoolPxl.Controllers
         private bool AcademieJaarExists(int id)
         {
             return _context.AcademieJaaren.Any(e => e.AcademieJaarId == id);
+        }
+        private RedirectToActionResult RedirecToNotFound()
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { categorie = "Academie Jaar" });
+        }
+        private RedirectToActionResult RedirecToNotFound(int? id = 0)
+        {
+            return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { id, categorie = "Academie Jaar" });
         }
     }
 }
