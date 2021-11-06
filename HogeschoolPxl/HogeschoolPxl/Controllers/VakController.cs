@@ -25,7 +25,7 @@ namespace HogeschoolPxl.Controllers
         // GET: Vak
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Vakken.ToListAsync());
+            return View(await _context.Vakken.Include(v => v.Handboek).ToListAsync());
         }
 
         // GET: Vak/Details/5

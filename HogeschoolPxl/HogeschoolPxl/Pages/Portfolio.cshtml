@@ -4,9 +4,146 @@
 }
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title></title>
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/Protfolio.css" />
 </head>
 <body>
-    <h3>portfolio</h3>
+    <header class="bg-light">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">HogeschoolPxl</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/gebruiker/index">Gebruikers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/vak/index">Vak</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/lector/index">Lector</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/vaklector/index">VakLector</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/student/index">Studenten</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/handboek/index">Handboek</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/inschrijving/index">Inschrijving</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/academiejaar/index">AcademieJaar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark active" href="#">Portfolio</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                Project intializeren
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>Nuget Package instaleren :</p>
+                    <ul>
+                        <li>Microsoft.EntityFrameworkCore.SqlServer</li>
+                        <li>Microsoft.EntityFrameworkCore.Tools</li>
+                    </ul>
+                    <p>Class AppDbContext aanmaken</p>
+                </blockquote>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Models
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>klassen aanmaken </p>
+                    <ul>
+                        <li>Gebruiker</li>
+                        <li>Vak</li>
+                        <li>Handboek</li>
+                        <li>Lector</li>
+                        <li>VakLector</li>
+                        <li>Student</li>
+                        <li>Inschrijvingen</li>
+                        <li>Academiejaar</li>
+                    </ul>
+                    <p>Relaties tussen de klassen toevoegen</p>
+                    <p>Model Validation toevoegen</p>
+                </blockquote>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Servies
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <p>mijn servies aanmaken :</p>
+                    <ul>
+                        <li>IPxl interface Creëren</li>
+                        <li>PartialSQLPxlRepository class creëren voor implementeren van de interface</li>
+                        <li>Registreer de service in startup.cs</li>
+                    </ul>
+                </blockquote>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Controllers & Views
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <ul>
+                        <li>Scaffold alle controllers met hen views</li>
+                        <li>Views styling met bootstrap en css stylesheet</li>
+                        <li>Gbruik maken van TagHelpers, View Component en Partial View om de code leesbaar en eenvoudiger  te maken</li>
+                        <li>Ipxl interface injection in alle controllers in plaats van de AppDbContext</li>
+                    </ul>
+                </blockquote>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                Data
+            </div>
+            <div class="card-body">
+                <blockquote class="blockquote mb-0">
+                    <ul>
+                        <li>ConnectionString aanmaken in appsettings.json</li>
+                        <li>ConnectionString toevoegen in startup.cs</li>
+                        <li>Seed Data class toevoegen om een initial data te hebben</li>
+                        <li>Add migration</li>
+                    </ul>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2021 - HogeschoolPxl - <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

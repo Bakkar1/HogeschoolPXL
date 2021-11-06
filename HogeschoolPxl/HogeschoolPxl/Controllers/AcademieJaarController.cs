@@ -23,7 +23,8 @@ namespace HogeschoolPxl.Controllers
         // GET: AcademieJaar
         public async Task<IActionResult> Index()
         {
-            return View(await _context.AcademieJaaren.ToListAsync());
+            //int AantalInschrijvingen = _context.AcademieJaaren.Include(a => a.Inschrijvingen).Count();
+            return View(await _context.AcademieJaaren.Include(a => a.Inschrijvingen).ToListAsync());
         }
 
         // GET: AcademieJaar/Details/5

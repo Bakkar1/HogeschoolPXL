@@ -6,41 +6,27 @@
 <h3 class="cat-heading">Vakken</h3>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-outline-success" asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.VakNaam)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Studiepunten)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HandboekId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.VakNaam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Studiepunten)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HandboekId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.VakId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.VakId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VakId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="d-flex p-2 flex-wrap">
+    @foreach (var item in Model)
+    {
+    <div class="card m-1">
+        <div class="card-header bg-blue">
+            @item.VakNaam
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Studiepunten : @item.Studiepunten</h5>
+            <p class="card-text">
+                Boek : <a asp-controller="Handboek" asp-action="Details" asp-route-id="@item.Handboek.HandboekId">@item.Handboek.Title</a>
+            </p>
+            <div class="links">
+                <a asp-action="Edit" asp-route-id="@item.VakId" class="btn btn-primary">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.VakId" class="btn btn-info">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.VakId" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+    }
+</div>

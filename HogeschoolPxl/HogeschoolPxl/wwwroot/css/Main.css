@@ -4,8 +4,22 @@
     --main-color: #e91e63;
     --main-transition: all .5s ease-in-out;
 }
+.pxl-div{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.pxl-div h1 span {
+    display: inline-block;
+}
+.pxl-div h1 span::first-letter {
+    color: var(--main-color)
+}
 a,
-input{
+input {
     transition: var(--main-transition);
 }
 a.active {
@@ -19,7 +33,7 @@ input.form-control:focus {
     border-color: var(--main-color);
     box-shadow: 0 0 5px 0.2rem rgb(233 30 99/ 25%);
 }
-    .custom-container {
+.custom-container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
@@ -57,4 +71,10 @@ input.form-control:focus {
 
 .custom-container .card > img{
     height: 400px;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }

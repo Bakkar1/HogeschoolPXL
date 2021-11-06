@@ -4,32 +4,30 @@
     ViewData["Title"] = "AcademieJaren";
 }
 
-<h1>Index</h1>
+<h3 class="cat-heading">Academiejaren</h3>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-outline-success" asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDatum)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDatum)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.AcademieJaarId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.AcademieJaarId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.AcademieJaarId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="d-flex p-2 flex-wrap" style="display: block !important">
+    @foreach (var item in Model)
+    {
+        <div class="card m-1">
+            <div class="card-header bg-blue">
+                @item.StartDatum.ToLongDateString();
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Aantal inschrijvingen @item.Inschrijvingen.Count()</h5>
+                <p class="card-text">
+                    Acadiemejaar loop tot 07/05/@item.StartDatum.AddYears(1).Year
+                </p>
+                <div class="links">
+                    <a asp-action="Edit" asp-route-id="@item.AcademieJaarId" class="btn btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.AcademieJaarId" class="btn btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.AcademieJaarId" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

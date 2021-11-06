@@ -23,9 +23,15 @@ namespace HogeschoolPxl.Controllers
         }
 
         // GET: Inschrijving
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string year)
         {
-            return View(await ipxl.GetInschrijvingen());
+            if (year == null)
+            {
+                ViewBag.YearFilter = "nofilter";
+                return View(await ipxl.GetInschrijvingen());
+            }
+            ViewBag.YearFilter = year;
+            return View(await ipxl.GetInschrijvingenByYear(year));
         }
 
         // GET: Inschrijving/Details/5

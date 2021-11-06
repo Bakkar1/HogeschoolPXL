@@ -10,10 +10,10 @@ namespace HogeschoolPxl.Validation
     {
         public IEnumerable<ModelValidationResult> Validate(ModelValidationContext context)
         {
-            var dtm = DateTime.Now;
+            //DateTime dtm = DateTime.Now;
             var lst = new List<ModelValidationResult>();
 
-            if (DateTime.TryParse(context.Model.ToString(), out dtm))
+            if (DateTime.TryParse(context.Model.ToString(), out DateTime dtm))
             {
                 if (dtm > new DateTime(DateTime.Now.Year, 1, 1))
                 {

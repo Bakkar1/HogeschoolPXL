@@ -7,35 +7,27 @@
 <h3 class="cat-heading">VakLectoren</h3>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-outline-success" asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.LectorId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VakId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.LectorId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VakId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.VakLectorId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.VakLectorId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.VakLectorId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<div class="d-flex p-2">
+    @foreach (var item in Model)
+    {
+        <div class="card m-1">
+            <div class="card-header bg-blue">
+                Lector : @item.Lector.Gebruiker.Naam
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">@item.Lector.Gebruiker.VoorNaam geeft @item.Vak.VakNaam les</h5>
+                <p class="card-text">
+                    De handboek voor @item.Vak.VakNaam is @item.Vak.Handboek.Title
+                </p>
+                <div class="links">
+                    <a asp-action="Edit" asp-route-id="@item.VakLectorId" class="btn btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.VakLectorId" class="btn btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.VakLectorId" class="btn btn-danger">Delete</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

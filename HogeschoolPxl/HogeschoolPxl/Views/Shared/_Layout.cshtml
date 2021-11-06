@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/Main.css" />
-    
+
     @if (IsSectionDefined("GebruikerStyle"))
     {
         @RenderSection("GebruikerStyle", required: true);
@@ -15,6 +15,10 @@
     @if (IsSectionDefined("LectorenStyle"))
     {
         @RenderSection("LectorenStyle", required: true);
+    }
+    @if (IsSectionDefined("InschrijvingStyle"))
+    {
+        @RenderSection("InschrijvingStyle", required: true);
     }
 </head>
 <body>

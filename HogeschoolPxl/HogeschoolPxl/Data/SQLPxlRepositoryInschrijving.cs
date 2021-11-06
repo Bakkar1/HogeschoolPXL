@@ -11,7 +11,19 @@ namespace HogeschoolPxl.Data
     {
         public async Task<IEnumerable<Inschrijving>> GetInschrijvingen()
         {
-            return await _context.Inschrijvingen.ToListAsync();
+            return await _context.Inschrijvingen
+                .Include(i => i.Student.Gebruiker)
+                .Include(i => i.VakLector.Vak)
+                .Include(i => i.AcademieJaar)
+                .ToListAsync();
+        }
+        public async Task<IEnumerable<Inschrijving>> GetInschrijvingenByYear(string year)
+        {
+            return await _context.Inschrijvingen
+                .Include(i => i.Student.Gebruiker)
+                .Include(i => i.VakLector.Vak)
+                .Include(i => i.AcademieJaar)
+                .Where(i => i.AcademieJaar.StartDatum.Year.ToString() == year).ToListAsync();
         }
         public async Task<Inschrijving> GetInschrijving(int? id)
         {

@@ -14,10 +14,12 @@ namespace HogeschoolPxl.Controllers
     public class StudentController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IPxl iPxl;
 
-        public StudentController(AppDbContext context)
+        public StudentController(AppDbContext context, IPxl iPxl)
         {
             _context = context;
+            this.iPxl = iPxl;
         }
 
         // GET: Student
@@ -25,7 +27,6 @@ namespace HogeschoolPxl.Controllers
         {
             return View(await _context.students.Include(s => s.Gebruiker).ToListAsync());
         }
-
         // GET: Student/Details/5
         public async Task<IActionResult> Details(int? id)
         {

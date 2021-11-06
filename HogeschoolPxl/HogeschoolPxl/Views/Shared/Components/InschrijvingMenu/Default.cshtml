@@ -1,0 +1,34 @@
+﻿@model IEnumerable<string>
+@{ 
+    string YearFilter = ViewBag.YearFilter;
+}
+<ul class="navbar-nav inschrijving-menu">
+    <li class="nav-item">
+        @if (YearFilter == "nofilter")
+        {
+            <a class='btn btn-outline-primary active' asp-controller="Inschrijving" asp-action="index">All</a>
+        }
+        else
+        {
+            <a class='btn btn-outline-primary' asp-controller="Inschrijving" asp-action="index">All</a>
+        }
+
+    </li>
+    @foreach (string year in Model)
+    {
+        <li class="nav-item">
+            @if (YearFilter == year)
+            {
+                <a class="btn btn-outline-primary active" asp-controller="Inschrijving" asp-action="index" asp-route-year="@year">@year</a>
+            }
+            else
+            {   
+                <a class="btn btn-outline-primary" asp-controller="Inschrijving" asp-action="index" asp-route-year="@year">@year</a>
+            }
+        </li>
+
+    }
+    <li class="nav-item">
+        <a class="btn btn-outline-success"  asp-controller="Inschrijving" asp-action="Create">Create New</a>
+    </li>
+</ul>

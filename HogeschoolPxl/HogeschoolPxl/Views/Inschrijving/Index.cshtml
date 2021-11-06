@@ -3,45 +3,17 @@
 @{
     ViewData["Title"] = "Inschrijvingen";
 }
+@section InschrijvingStyle{
+    <link rel="stylesheet" href="~/css/Inschrijving.css" />
+}
 
 <h3 class="cat-heading">Inschrijvingen</h3>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.StudentId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VakLectorId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.AcademieJaarId)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StudentId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VakLectorId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AcademieJaarId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.InschrijvingId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.InschrijvingId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.InschrijvingId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<vc:inschrijving-menu></vc:inschrijving-menu>
+
+<div class="d-flex p-2 flex-wrap">
+    @foreach (Inschrijving inschrijving in Model)
+    {
+        <div inschrijving="@inschrijving"></div>
+    }
+</div>
