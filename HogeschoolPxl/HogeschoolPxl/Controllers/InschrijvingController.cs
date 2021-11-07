@@ -13,13 +13,11 @@ namespace HogeschoolPxl.Controllers
 {
     public class InschrijvingController : Controller
     {
-        private readonly IPxl ipxl;
-        private readonly AppDbContext _context;
+        private readonly IPxl iPxl;
 
-        public InschrijvingController(IPxl ipxl, AppDbContext context)
+        public InschrijvingController(IPxl iPxl)
         {
-            this.ipxl = ipxl;
-            _context = context;
+            this.iPxl = iPxl;
         }
 
         // GET: Inschrijving
@@ -28,10 +26,10 @@ namespace HogeschoolPxl.Controllers
             if (year == null)
             {
                 ViewBag.YearFilter = "nofilter";
-                return View(await ipxl.GetInschrijvingen());
+                return View(await iPxl.GetInschrijvingen());
             }
             ViewBag.YearFilter = year;
-            return View(await ipxl.GetInschrijvingenByYear(year));
+            return View(await iPxl.GetInschrijvingenByYear(year));
         }
 
         // GET: Inschrijving/Details/5
@@ -42,7 +40,7 @@ namespace HogeschoolPxl.Controllers
                 return NotFound();
             }
 
-            var inschrijving = await ipxl.GetInschrijving(id);
+            var inschrijving = await iPxl.GetInschrijving(id);
             if (inschrijving == null)
             {
                 return NotFound();
@@ -66,23 +64,20 @@ namespace HogeschoolPxl.Controllers
         {
             if (ModelState.IsValid)
             {
-                Student std = _context.students.Find(inschrijving.StudentId);
+                Student std = await iPxl.GetStudent(inschrijving.StudentId);
                 if(std == null) ModelState.AddModelError("", $"We could not find a student with id : {inschrijving.StudentId}");
+                
+                VakLector vakL = await iPxl.GetVakLectorByLector(inschrijving.VakLectorId);
 
-                VakLector vakL =  _context.VakLectoren
-                    .Include(i => i.Vak)
-                    .Where(i => i.VakLectorId == inschrijving.VakLectorId)
-                    .FirstOrDefault();
                 if (vakL == null) ModelState.AddModelError("", $"We could not find a vak lector with id : {inschrijving.VakLectorId}");
 
-                AcademieJaar academie =  _context.AcademieJaaren.Find(inschrijving.AcademieJaarId);
+                AcademieJaar academie = await iPxl.GetAcademieJaar(inschrijving.AcademieJaarId);
 
                 if (academie == null) ModelState.AddModelError("", $"We could not find an acadieme jaar with id : {inschrijving.AcademieJaarId}");
 
                 if (std == null || vakL == null || academie ==null) return View(inschrijving);
 
-                _context.Add(inschrijving);
-                await _context.SaveChangesAsync();
+                await iPxl.AddInschrijving(inschrijving);
                 return RedirectToAction(nameof(Index));
             }
             return View(inschrijving);
@@ -96,7 +91,7 @@ namespace HogeschoolPxl.Controllers
                 return NotFound();
             }
 
-            var inschrijving = await _context.Inschrijvingen.FindAsync(id);
+            var inschrijving = await iPxl.GetInschrijving(id);
             if (inschrijving == null)
             {
                 return NotFound();
@@ -120,12 +115,11 @@ namespace HogeschoolPxl.Controllers
             {
                 try
                 {
-                    _context.Update(inschrijving);
-                    await _context.SaveChangesAsync();
+                    await iPxl.UpdateInschrijving(inschrijving);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!InschrijvingExists(inschrijving.InschrijvingId))
+                    if (!iPxl.InschrijvingExists(inschrijving.InschrijvingId))
                     {
                         return NotFound();
                     }
@@ -147,8 +141,7 @@ namespace HogeschoolPxl.Controllers
                 return NotFound();
             }
 
-            var inschrijving = await _context.Inschrijvingen
-                .FirstOrDefaultAsync(m => m.InschrijvingId == id);
+            var inschrijving = await iPxl.GetInschrijving(id);
             if (inschrijving == null)
             {
                 return NotFound();
@@ -162,15 +155,8 @@ namespace HogeschoolPxl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var inschrijving = await _context.Inschrijvingen.FindAsync(id);
-            _context.Inschrijvingen.Remove(inschrijving);
-            await _context.SaveChangesAsync();
+            await iPxl.DeleteInschrijving(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool InschrijvingExists(int id)
-        {
-            return _context.Inschrijvingen.Any(e => e.InschrijvingId == id);
         }
         private RedirectToActionResult RedirecToNotFound()
         {

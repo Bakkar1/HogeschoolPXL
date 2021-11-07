@@ -11,30 +11,35 @@ namespace HogeschoolPxl.Data
     {
         public async Task<IEnumerable<Handboek>> GetHandboeken()
         {
-            return await _context.handboeken.ToListAsync();
+            return await _context.Handboeken.ToListAsync();
         }
         public async Task<Handboek> GetHandboek(int? id)
         {
-            return await _context.handboeken.FindAsync(id);
+            return await _context.Handboeken.FindAsync(id);
         }
         public async Task<Handboek> AddHandboek(Handboek handboek)
         {
-            _context.handboeken.Add(handboek);
+            _context.Handboeken.Add(handboek);
             await _context.SaveChangesAsync();
             return handboek;
         }
         public async Task<Handboek> UpdateHandboek(Handboek handboek)
         {
-            _context.handboeken.Update(handboek);
+            _context.Handboeken.Update(handboek);
             await _context.SaveChangesAsync();
             return handboek;
         }
         public async Task<Handboek> DeleteHandboek(int id)
         {
-            var handboek = await _context.handboeken.FindAsync(id);
-            _context.handboeken.Remove(handboek);
+            var handboek = await _context.Handboeken.FindAsync(id);
+            _context.Handboeken.Remove(handboek);
             await _context.SaveChangesAsync();
             return handboek;
+        }
+
+        public bool HandboekExists(int id)
+        {
+            return _context.Handboeken.Any(e => e.HandboekId == id);
         }
     }
 }

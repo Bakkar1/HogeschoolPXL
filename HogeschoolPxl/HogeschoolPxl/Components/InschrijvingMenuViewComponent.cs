@@ -18,7 +18,7 @@ namespace HogeschoolPxl.Components
         public IViewComponentResult Invoke()
         {
             return View(
-            context.AcademieJaaren
+            context.AcademieJaren
             .Select(x => x.StartDatum.Year.ToString())
             .Distinct()
             .OrderBy(x => x));

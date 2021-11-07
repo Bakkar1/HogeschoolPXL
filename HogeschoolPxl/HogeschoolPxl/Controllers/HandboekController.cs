@@ -128,8 +128,6 @@ namespace HogeschoolPxl.Controllers
                     FotoHelper ft = new FotoHelper(HostingEnvironment);
                     handboek.Afbeelding = ft.ProcessUploadedFile(model);
                 }
-                //_context.handboeken.Update(handboek);
-                //_context.SaveChanges();
                 await iPxl.UpdateHandboek(handboek);
                 return RedirectToAction("Index");
             }
@@ -158,9 +156,6 @@ namespace HogeschoolPxl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            //var handboek = await _context.handboeken.FindAsync(id);
-            //_context.handboeken.Remove(handboek);
-            //await _context.SaveChangesAsync();
             Handboek handboek = await iPxl.DeleteHandboek(id);
 
             //delete existing photo
@@ -168,12 +163,6 @@ namespace HogeschoolPxl.Controllers
             System.IO.File.Delete(filePath);
 
             return RedirectToAction(nameof(Index));
-        }
-
-        private async Task<bool> HandboekExists(int id)
-        {
-            Handboek handboek = await iPxl.GetHandboek(id);
-            return handboek != null;
         }
         private RedirectToActionResult RedirecToNotFound()
         {

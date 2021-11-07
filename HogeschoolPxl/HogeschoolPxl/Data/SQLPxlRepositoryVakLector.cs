@@ -11,12 +11,23 @@ namespace HogeschoolPxl.Data
     {
         public async Task<IEnumerable<VakLector>> GetVakLectoren()
         {
-            return await _context.VakLectoren.ToListAsync();
+            return await _context.VakLectoren
+                 .Include(vl => vl.Lector.Gebruiker)
+                .Include(vl => vl.Vak.Handboek)
+                .ToListAsync();
         }
 
         public async Task<VakLector> GetVakLector(int? id)
         {
             return await _context.VakLectoren.FindAsync(id);
+        }
+
+        public async Task<VakLector> GetVakLectorByLector(int vakLecotrId)
+        {
+            return await _context.VakLectoren
+                    .Include(i => i.Vak)
+                    .Where(i => i.VakLectorId == vakLecotrId)
+                    .FirstOrDefaultAsync();
         }
 
         public async Task<VakLector> AddVakLector(VakLector vakLector)
@@ -39,6 +50,11 @@ namespace HogeschoolPxl.Data
             _context.VakLectoren.Remove(vakLector);
             await _context.SaveChangesAsync();
             return vakLector;
+        }
+
+        public bool VakLectorExists(int id)
+        {
+            return _context.VakLectoren.Any(e => e.VakLectorId == id);
         }
     }
 }

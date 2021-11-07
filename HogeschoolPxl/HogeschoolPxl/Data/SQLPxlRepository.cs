@@ -35,7 +35,7 @@ namespace HogeschoolPxl.Data
 
         public Handboek GetHandboek(int id)
         {
-            return _context.handboeken.Find(id);
+            return _context.Handboeken.Find(id);
         }
     }
 }

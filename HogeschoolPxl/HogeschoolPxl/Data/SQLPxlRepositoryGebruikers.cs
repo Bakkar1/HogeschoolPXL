@@ -41,5 +41,10 @@ namespace HogeschoolPxl.Data
             await _context.SaveChangesAsync();
             return gebruiker;
         }
+
+        public bool GebruikerExists(int id)
+        {
+            return _context.Gebruikers.Any(e => e.GebruikerId == id);
+        }
     }
 }

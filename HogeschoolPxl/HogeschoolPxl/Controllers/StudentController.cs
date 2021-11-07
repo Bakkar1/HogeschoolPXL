@@ -25,21 +25,23 @@ namespace HogeschoolPxl.Controllers
         // GET: Student
         public async Task<IActionResult> Index()
         {
-            return View(await _context.students.Include(s => s.Gebruiker).ToListAsync());
+            //return View(await _context.students.Include(s => s.Gebruiker).ToListAsync());
+            return View(await iPxl.GetStudenten());
         }
         // GET: Student/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
-            var student = await _context.students
-                .FirstOrDefaultAsync(m => m.StudentId == id);
+            //var student = await _context.students
+            //    .FirstOrDefaultAsync(m => m.StudentId == id);
+            var student = await iPxl.GetStudent(id);
             if (student == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
 
             return View(student);
@@ -60,8 +62,9 @@ namespace HogeschoolPxl.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(student);
-                await _context.SaveChangesAsync();
+                //_context.Add(student);
+                //await _context.SaveChangesAsync();
+                await iPxl.AddStudent(student);
                 return RedirectToAction(nameof(Index));
             }
             return View(student);
@@ -72,13 +75,14 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
-            var student = await _context.students.FindAsync(id);
+            //var student = await _context.students.FindAsync(id);
+            var student = await iPxl.GetStudent(id);
             if (student == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
             return View(student);
         }
@@ -92,21 +96,22 @@ namespace HogeschoolPxl.Controllers
         {
             if (id != student.StudentId)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(student);
-                    await _context.SaveChangesAsync();
+                    //_context.Update(student);
+                    //await _context.SaveChangesAsync();
+                    await iPxl.UpdateStudent(student);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!StudentExists(student.StudentId))
+                    if (!iPxl.StudentExists(student.StudentId))
                     {
-                        return NotFound();
+                        return RedirecToNotFound(id);
                     }
                     else
                     {
@@ -123,14 +128,15 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
-            var student = await _context.students
-                .FirstOrDefaultAsync(m => m.StudentId == id);
+            //var student = await _context.students
+            //    .FirstOrDefaultAsync(m => m.StudentId == id);
+            var student = await iPxl.GetStudent(id);
             if (student == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
 
             return View(student);
@@ -141,15 +147,11 @@ namespace HogeschoolPxl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var student = await _context.students.FindAsync(id);
-            _context.students.Remove(student);
-            await _context.SaveChangesAsync();
+            //var student = await _context.students.FindAsync(id);
+            //_context.students.Remove(student);
+            //await _context.SaveChangesAsync();
+            await iPxl.DeleteStudent(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool StudentExists(int id)
-        {
-            return _context.students.Any(e => e.StudentId == id);
         }
         private RedirectToActionResult RedirecToNotFound()
         {

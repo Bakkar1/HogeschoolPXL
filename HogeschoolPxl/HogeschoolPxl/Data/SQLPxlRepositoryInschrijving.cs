@@ -48,5 +48,9 @@ namespace HogeschoolPxl.Data
             await _context.SaveChangesAsync();
             return inschrijving;
         }
+        public bool InschrijvingExists(int id)
+        {
+            return _context.Inschrijvingen.Any(e => e.InschrijvingId == id);
+        }
     }
 }

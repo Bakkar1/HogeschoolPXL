@@ -11,12 +11,13 @@ namespace HogeschoolPxl.Data
     {
         public async Task<IEnumerable<Vak>> GetVakken()
         {
-            return await _context.Vakken.ToListAsync();
+            return await _context.Vakken.Include(v => v.Handboek).ToListAsync();
         }
 
         public async Task<Vak> GetVak(int? id)
         {
-            return await _context.Vakken.FindAsync(id);
+            return await _context.Vakken
+                .FindAsync(id);
         }
 
         public async Task<Vak> AddVak(Vak vak)
@@ -39,6 +40,11 @@ namespace HogeschoolPxl.Data
             _context.Vakken.Remove(vak);
             await _context.SaveChangesAsync();
             return vak;
+        }
+
+        public bool VakExists(int id)
+        {
+            return _context.Vakken.Any(e => e.VakId == id);
         }
     }
 }

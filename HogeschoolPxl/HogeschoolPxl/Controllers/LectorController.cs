@@ -14,19 +14,17 @@ namespace HogeschoolPxl.Controllers
 {
     public class LectorController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly IPxl iPxl;
 
-        public LectorController(AppDbContext context, IPxl iPxl)
+        public LectorController(IPxl iPxl)
         {
-            _context = context;
             this.iPxl = iPxl;
         }
 
         // GET: Lector
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Lectoren.Include(l => l.Gebruiker).ToListAsync());
+            return View(await iPxl.GetLectoren());
         }
 
         // GET: Lector/Details/5
@@ -34,14 +32,12 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
-
-            var lector = await _context.Lectoren
-                .FirstOrDefaultAsync(m => m.LectorId == id);
+            var lector = await iPxl.GetLector(id);
             if (lector == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
 
             return View(lector);
@@ -67,8 +63,8 @@ namespace HogeschoolPxl.Controllers
             model.Gebruikers = await iPxl.GetGebruikers();
             if (ModelState.IsValid)
             {
-                var CheckLector = _context.Lectoren.Where(l => l.GebruikerId == model.GebruikerId).FirstOrDefault();
-                if(CheckLector != null)
+                var CheckLector = await iPxl.CheckLector(model.GebruikerId);
+                if (CheckLector != null)
                 {
                     ModelState.AddModelError("", $"Lector with gebruiker id {model.GebruikerId} alredy exist");
                     return View(model);
@@ -77,8 +73,7 @@ namespace HogeschoolPxl.Controllers
                 {
                     GebruikerId = model.GebruikerId
                 };
-                _context.Add(lector);
-                await _context.SaveChangesAsync();
+                await iPxl.AddLector(lector);
                 return RedirectToAction(nameof(Index));
             }
             return View(model);
@@ -89,13 +84,12 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
-
-            var lector = await _context.Lectoren.FindAsync(id);
+            var lector = await iPxl.GetLector(id);
             if (lector == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
             return View(lector);
         }
@@ -109,21 +103,20 @@ namespace HogeschoolPxl.Controllers
         {
             if (id != lector.LectorId)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(lector);
-                    await _context.SaveChangesAsync();
+                    await iPxl.UpdateLector(lector);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LectorExists(lector.LectorId))
+                    if (!iPxl.LectorExists(lector.LectorId))
                     {
-                        return NotFound();
+                        return RedirecToNotFound(lector.LectorId);
                     }
                     else
                     {
@@ -140,14 +133,12 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
-
-            var lector = await _context.Lectoren
-                .FirstOrDefaultAsync(m => m.LectorId == id);
+            var lector = await iPxl.GetLector(id);
             if (lector == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
 
             return View(lector);
@@ -158,15 +149,8 @@ namespace HogeschoolPxl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var lector = await _context.Lectoren.FindAsync(id);
-            _context.Lectoren.Remove(lector);
-            await _context.SaveChangesAsync();
+            await iPxl.DeleteLector(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool LectorExists(int id)
-        {
-            return _context.Lectoren.Any(e => e.LectorId == id);
         }
         private RedirectToActionResult RedirecToNotFound()
         {

@@ -14,6 +14,8 @@ namespace HogeschoolPxl.Data
         Task<Gebruiker> AddGebruiker(Gebruiker gebruiker);
         Task<Gebruiker> UpdateGebruiker(Gebruiker gebruiker);
         Task<Gebruiker> DeleteGebruiker(int id);
+
+        bool GebruikerExists(int id);
         #endregion
 
         #region handboek
@@ -22,6 +24,8 @@ namespace HogeschoolPxl.Data
         Task<Handboek> AddHandboek(Handboek handboek);
         Task<Handboek> UpdateHandboek(Handboek handboek);
         Task<Handboek> DeleteHandboek(int id);
+
+        bool HandboekExists(int id);
         #endregion
 
         #region Inchrijving
@@ -31,6 +35,8 @@ namespace HogeschoolPxl.Data
         Task<Inschrijving> AddInschrijving(Inschrijving inschrijving);
         Task<Inschrijving> UpdateInschrijving(Inschrijving inschrijving);
         Task<Inschrijving> DeleteInschrijving(int id);
+
+        bool InschrijvingExists(int id);
         #endregion
 
         #region Lector
@@ -39,6 +45,8 @@ namespace HogeschoolPxl.Data
         Task<Lector> AddLector(Lector lector);
         Task<Lector> UpdateLector(Lector Lector);
         Task<Lector> DeleteLector(int id);
+        bool LectorExists(int id);
+        Task<Lector> CheckLector(int id);
         #endregion
 
         #region Student
@@ -47,6 +55,8 @@ namespace HogeschoolPxl.Data
         Task<Student> AddStudent(Student student);
         Task<Student> UpdateStudent(Student student);
         Task<Student> DeleteStudent(int id);
+
+        bool StudentExists(int id);
         #endregion
 
         #region Vak
@@ -55,14 +65,28 @@ namespace HogeschoolPxl.Data
         Task<Vak> AddVak(Vak vak);
         Task<Vak> UpdateVak(Vak vak);
         Task<Vak> DeleteVak(int id);
+
+        bool VakExists(int id);
         #endregion
 
         #region VakLector
         Task<IEnumerable<VakLector>> GetVakLectoren();
         Task<VakLector> GetVakLector(int? id);
+        Task<VakLector> GetVakLectorByLector(int vakLecotrId);
         Task<VakLector> AddVakLector(VakLector vakLector);
         Task<VakLector> UpdateVakLector(VakLector vakLector);
         Task<VakLector> DeleteVakLector(int id);
+
+        bool VakLectorExists(int id);
+        #endregion
+
+        #region AcademieJaar
+        Task<IEnumerable<AcademieJaar>> GetAcademieJaren();
+        Task<AcademieJaar> GetAcademieJaar(int? id);
+        Task<AcademieJaar> AddAcademieJaar(AcademieJaar academieJaar);
+        Task<AcademieJaar> UpdateAcademieJaar(AcademieJaar academieJaar);
+        Task<AcademieJaar> DeleteAcademieJaar(int id);
+        bool AcademieJaarExists(int id);
         #endregion
     }
 }

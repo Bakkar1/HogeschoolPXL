@@ -11,7 +11,7 @@ namespace HogeschoolPxl.Data
     {
         public async Task<IEnumerable<Lector>> GetLectoren()
         {
-            return await _context.Lectoren.ToListAsync();
+            return await _context.Lectoren.Include(l => l.Gebruiker).ToListAsync();
         }
 
         public async Task<Lector> GetLector(int? id)
@@ -39,6 +39,14 @@ namespace HogeschoolPxl.Data
             _context.Lectoren.Remove(lector);
             await _context.SaveChangesAsync();
             return lector;
+        }
+        public bool LectorExists(int id)
+        {
+            return _context.Lectoren.Any(e => e.LectorId == id);
+        }
+        public async Task<Lector> CheckLector(int gebruikerId)
+        {
+            return await _context.Lectoren.Where(l => l.GebruikerId == gebruikerId).FirstOrDefaultAsync();
         }
     }
 }

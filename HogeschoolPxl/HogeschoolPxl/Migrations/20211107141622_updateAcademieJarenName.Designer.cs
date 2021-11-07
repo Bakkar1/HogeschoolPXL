@@ -4,14 +4,16 @@ using HogeschoolPxl.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace HogeschoolPxl.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211107141622_updateAcademieJarenName")]
+    partial class updateAcademieJarenName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -83,7 +85,7 @@ namespace HogeschoolPxl.Migrations
 
                     b.HasKey("HandboekId");
 
-                    b.ToTable("Handboeken");
+                    b.ToTable("handboeken");
                 });
 
             modelBuilder.Entity("HogeschoolPxl.Models.Inschrijving", b =>
@@ -144,7 +146,7 @@ namespace HogeschoolPxl.Migrations
 
                     b.HasIndex("GebruikerId");
 
-                    b.ToTable("Students");
+                    b.ToTable("students");
                 });
 
             modelBuilder.Entity("HogeschoolPxl.Models.Vak", b =>

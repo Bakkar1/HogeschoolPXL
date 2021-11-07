@@ -14,19 +14,22 @@ namespace HogeschoolPxl.Controllers
     public class VakLectorController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IPxl iPxl;
 
-        public VakLectorController(AppDbContext context)
+        public VakLectorController(AppDbContext context, IPxl iPxl)
         {
             _context = context;
+            this.iPxl = iPxl;
         }
 
         // GET: VakLector
         public async Task<IActionResult> Index()
         {
-            return View(await _context.VakLectoren
-                .Include(vl => vl.Lector.Gebruiker)
-                .Include(vl => vl.Vak.Handboek)
-                .ToListAsync());
+            //return View(await _context.VakLectoren
+            //    .Include(vl => vl.Lector.Gebruiker)
+            //    .Include(vl => vl.Vak.Handboek)
+            //    .ToListAsync());
+            return View(await iPxl.GetVakLectoren());
         }
 
         // GET: VakLector/Details/5
@@ -34,14 +37,15 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
-            var vakLector = await _context.VakLectoren
-                .FirstOrDefaultAsync(m => m.VakLectorId == id);
+            //var vakLector = await _context.VakLectoren
+            //    .FirstOrDefaultAsync(m => m.VakLectorId == id);
+            var vakLector = await iPxl.GetVakLector(id);
             if (vakLector == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
 
             return View(vakLector);
@@ -62,8 +66,9 @@ namespace HogeschoolPxl.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vakLector);
-                await _context.SaveChangesAsync();
+                //_context.Add(vakLector);
+                //await _context.SaveChangesAsync();
+                await iPxl.AddVakLector(vakLector);
                 return RedirectToAction(nameof(Index));
             }
             return View(vakLector);
@@ -74,13 +79,14 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
-            var vakLector = await _context.VakLectoren.FindAsync(id);
+            //var vakLector = await _context.VakLectoren.FindAsync(id);
+            var vakLector = await iPxl.GetVakLector(id);
             if (vakLector == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
             return View(vakLector);
         }
@@ -94,21 +100,22 @@ namespace HogeschoolPxl.Controllers
         {
             if (id != vakLector.VakLectorId)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(vakLector);
-                    await _context.SaveChangesAsync();
+                    //_context.Update(vakLector);
+                    //await _context.SaveChangesAsync();
+                    await iPxl.UpdateVakLector(vakLector);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VakLectorExists(vakLector.VakLectorId))
+                    if (!iPxl.VakLectorExists(vakLector.VakLectorId))
                     {
-                        return NotFound();
+                        return RedirecToNotFound(id);
                     }
                     else
                     {
@@ -125,14 +132,15 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
-            var vakLector = await _context.VakLectoren
-                .FirstOrDefaultAsync(m => m.VakLectorId == id);
+            //var vakLector = await _context.VakLectoren
+            //    .FirstOrDefaultAsync(m => m.VakLectorId == id);
+            var vakLector = await iPxl.GetVakLector(id);
             if (vakLector == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
 
             return View(vakLector);
@@ -143,16 +151,13 @@ namespace HogeschoolPxl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var vakLector = await _context.VakLectoren.FindAsync(id);
-            _context.VakLectoren.Remove(vakLector);
-            await _context.SaveChangesAsync();
+            //var vakLector = await _context.VakLectoren.FindAsync(id);
+            //_context.VakLectoren.Remove(vakLector);
+            //await _context.SaveChangesAsync();
+            await iPxl.DeleteVakLector(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool VakLectorExists(int id)
-        {
-            return _context.VakLectoren.Any(e => e.VakLectorId == id);
-        }
         private RedirectToActionResult RedirecToNotFound()
         {
             return RedirectToAction(NotFoundIdInfo.ActionName, NotFoundIdInfo.ControllerName, new { categorie = "VakLector" });

@@ -13,18 +13,17 @@ namespace HogeschoolPxl.Controllers
 {
     public class AcademieJaarController : Controller
     {
-        private readonly AppDbContext _context;
+        private readonly IPxl iPxl;
 
-        public AcademieJaarController(AppDbContext context)
+        public AcademieJaarController(IPxl iPxl)
         {
-            _context = context;
+            this.iPxl = iPxl;
         }
 
         // GET: AcademieJaar
         public async Task<IActionResult> Index()
         {
-            //int AantalInschrijvingen = _context.AcademieJaaren.Include(a => a.Inschrijvingen).Count();
-            return View(await _context.AcademieJaaren.Include(a => a.Inschrijvingen).ToListAsync());
+            return View(await iPxl.GetAcademieJaren());
         }
 
         // GET: AcademieJaar/Details/5
@@ -32,14 +31,12 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
-
-            var academieJaar = await _context.AcademieJaaren
-                .FirstOrDefaultAsync(m => m.AcademieJaarId == id);
+            var academieJaar = await iPxl.GetAcademieJaar(id);
             if (academieJaar == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
 
             return View(academieJaar);
@@ -60,8 +57,7 @@ namespace HogeschoolPxl.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(academieJaar);
-                await _context.SaveChangesAsync();
+                await iPxl.AddAcademieJaar(academieJaar);
                 return RedirectToAction(nameof(Index));
             }
             return View(academieJaar);
@@ -72,13 +68,12 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
-
-            var academieJaar = await _context.AcademieJaaren.FindAsync(id);
+            var academieJaar = await iPxl.GetAcademieJaar(id);
             if (academieJaar == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
             return View(academieJaar);
         }
@@ -92,21 +87,20 @@ namespace HogeschoolPxl.Controllers
         {
             if (id != academieJaar.AcademieJaarId)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(academieJaar);
-                    await _context.SaveChangesAsync();
+                    await iPxl.UpdateAcademieJaar(academieJaar);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AcademieJaarExists(academieJaar.AcademieJaarId))
+                    if (!iPxl.AcademieJaarExists(academieJaar.AcademieJaarId))
                     {
-                        return NotFound();
+                        return RedirecToNotFound(id);
                     }
                     else
                     {
@@ -123,14 +117,12 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
-
-            var academieJaar = await _context.AcademieJaaren
-                .FirstOrDefaultAsync(m => m.AcademieJaarId == id);
+            var academieJaar = await iPxl.GetAcademieJaar(id);
             if (academieJaar == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
 
             return View(academieJaar);
@@ -141,15 +133,8 @@ namespace HogeschoolPxl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var academieJaar = await _context.AcademieJaaren.FindAsync(id);
-            _context.AcademieJaaren.Remove(academieJaar);
-            await _context.SaveChangesAsync();
+            await iPxl.DeleteAcademieJaar(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool AcademieJaarExists(int id)
-        {
-            return _context.AcademieJaaren.Any(e => e.AcademieJaarId == id);
         }
         private RedirectToActionResult RedirecToNotFound()
         {

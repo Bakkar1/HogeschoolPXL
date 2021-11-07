@@ -72,8 +72,6 @@ namespace HogeschoolPxl.Controllers
                     Email = model.Email,
                     ImageUrl = uniqueFileName
                 };
-                //_context.Add(gebruiker);
-                //await _context.SaveChangesAsync();
                 await iPxl.AddGebruiker(gebruiker);
                 return RedirectToAction(nameof(Index));
             }
@@ -109,60 +107,52 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(GebruikerEditViewModel model)
+        public async Task<IActionResult> Edit(int id, GebruikerEditViewModel model)
         {
+            if (id != model.GebruikerId)
+            {
+                return RedirecToNotFound();
+            }
+
             if (ModelState.IsValid)
             {
-                Gebruiker gebruiker = await iPxl.GetGebruiker(model.HelperId);
-
-                gebruiker.Naam = model.Naam;
-                gebruiker.VoorNaam = model.VoorNaam;
-                gebruiker.Email = model.Email;
-                gebruiker.ImageUrl = model.ExistingPhotoPath;
-
-                if (model.Photo != null)
+                try
                 {
-                    if (model.ExistingPhotoPath != null)
+                    Gebruiker gebruiker = await iPxl.GetGebruiker(model.HelperId);
+
+                    gebruiker.Naam = model.Naam;
+                    gebruiker.VoorNaam = model.VoorNaam;
+                    gebruiker.Email = model.Email;
+                    gebruiker.ImageUrl = model.ExistingPhotoPath;
+
+                    if (model.Photo != null)
                     {
-                        //delete existing photo
-                        string filePath = Path.Combine(HostingEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
-                        System.IO.File.Delete(filePath);
+                        if (model.ExistingPhotoPath != null)
+                        {
+                            //delete existing photo
+                            string filePath = Path.Combine(HostingEnvironment.WebRootPath, "images", model.ExistingPhotoPath);
+                            System.IO.File.Delete(filePath);
+                        }
+                        FotoHelper ft = new FotoHelper(HostingEnvironment);
+                        gebruiker.ImageUrl = ft.ProcessUploadedFile(model);
                     }
-                    FotoHelper ft = new FotoHelper(HostingEnvironment);
-                    gebruiker.ImageUrl = ft.ProcessUploadedFile(model);
+                    await iPxl.UpdateGebruiker(gebruiker);
+                    return RedirectToAction("Index");
                 }
-                //_context.Gebruikers.Update(gebruiker);
-                //await _context.SaveChangesAsync();
-                await iPxl.UpdateGebruiker(gebruiker);
-                return RedirectToAction("Index");
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!iPxl.GebruikerExists(model.GebruikerId))
+                    {
+                        return RedirecToNotFound(model.GebruikerId);
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+
             }
             return View(model);
-            //if (id != gebruiker.GebruikerId)
-            //{
-            //    return NotFound();
-            //}
-
-            //if (ModelState.IsValid)
-            //{
-            //    try
-            //    {
-            //        _context.Update(gebruiker);
-            //        await _context.SaveChangesAsync();
-            //    }
-            //    catch (DbUpdateConcurrencyException)
-            //    {
-            //        if (!GebruikerExists(gebruiker.GebruikerId))
-            //        {
-            //            return NotFound();
-            //        }
-            //        else
-            //        {
-            //            throw;
-            //        }
-            //    }
-            //    return RedirectToAction(nameof(Index));
-            //}
-            //return View(gebruiker);
         }
 
         // GET: Gebruiker/Delete/5
@@ -187,22 +177,12 @@ namespace HogeschoolPxl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            //var gebruiker = await _context.Gebruikers.FindAsync(id);
-            //_context.Gebruikers.Remove(gebruiker);
-            //await _context.SaveChangesAsync();
-
             Gebruiker gebruiker = await iPxl.DeleteGebruiker(id);
 
             //delete existing photo
             string filePath = Path.Combine(HostingEnvironment.WebRootPath, "images", gebruiker.ImageUrl);
             System.IO.File.Delete(filePath);
             return RedirectToAction(nameof(Index));
-        }
-
-        private async Task<bool> GebruikerExists(int id)
-        {
-            Gebruiker gebruiker = await iPxl.GetGebruiker(id);
-            return gebruiker != null;
         }
         private RedirectToActionResult RedirecToNotFound()
         {

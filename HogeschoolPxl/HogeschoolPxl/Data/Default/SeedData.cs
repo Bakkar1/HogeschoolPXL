@@ -34,9 +34,9 @@ namespace HogeschoolPxl.Data.Default
                 );
                 context.SaveChanges();
             }
-            if (!context.handboeken.Any())
+            if (!context.Handboeken.Any())
             {
-                context.handboeken.AddRange(
+                context.Handboeken.AddRange(
                     new Handboek()
                     {
                         Title = "C# Web 1",
@@ -62,7 +62,7 @@ namespace HogeschoolPxl.Data.Default
                      {
                          VakNaam = "C# Web 1",
                          Studiepunten = 5,
-                         HandboekId = context.handboeken.Where(h => h.Title == "C# Web 1").FirstOrDefault().HandboekId
+                         HandboekId = context.Handboeken.Where(h => h.Title == "C# Web 1").FirstOrDefault().HandboekId
                      }
                 );
                 context.SaveChanges();
@@ -80,9 +80,9 @@ namespace HogeschoolPxl.Data.Default
                 );
                 context.SaveChanges();
             }
-            if (!context.students.Any())
+            if (!context.Students.Any())
             {
-                context.students.AddRange(
+                context.Students.AddRange(
                     new Student()
                     {
                         GebruikerId = context.Gebruikers.Where(g => g.Naam == "Bakkar").FirstOrDefault().GebruikerId
@@ -90,9 +90,9 @@ namespace HogeschoolPxl.Data.Default
                 );
                 context.SaveChanges();
             }
-            if (!context.AcademieJaaren.Any())
+            if (!context.AcademieJaren.Any())
             {
-                context.AcademieJaaren.AddRange(
+                context.AcademieJaren.AddRange(
                     new AcademieJaar()
                     {
                         StartDatum = DateTime.Parse("09/20/2021")
@@ -105,7 +105,7 @@ namespace HogeschoolPxl.Data.Default
                 context.Inschrijvingen.AddRange(
                 new Inschrijving()
                 {
-                    StudentId = context.students.Where
+                    StudentId = context.Students.Where
                              (s => s.GebruikerId == context.Gebruikers.Where(g => g.Naam == "Bakkar").FirstOrDefault().GebruikerId)
                              .FirstOrDefault().StudentId,
                     VakLectorId = context.VakLectoren.Where

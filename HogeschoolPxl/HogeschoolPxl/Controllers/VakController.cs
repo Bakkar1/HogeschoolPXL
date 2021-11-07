@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
 using HogeschoolPxl.Helpers;
+using HogeschoolPxl.ViewModels;
 
 namespace HogeschoolPxl.Controllers
 {
@@ -25,7 +26,7 @@ namespace HogeschoolPxl.Controllers
         // GET: Vak
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Vakken.Include(v => v.Handboek).ToListAsync());
+            return View(await iPxl.GetVakken());
         }
 
         // GET: Vak/Details/5
@@ -33,23 +34,25 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
-
-            var vak = await _context.Vakken
-                .FirstOrDefaultAsync(m => m.VakId == id);
+            var vak = await iPxl.GetVak(id);
             if (vak == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
 
             return View(vak);
         }
 
         // GET: Vak/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            VakCreateViewModel model = new VakCreateViewModel()
+            {
+                Handboeken = await iPxl.GetHandboeken()
+            };
+            return View(model);
         }
 
         // POST: Vak/Create
@@ -57,20 +60,26 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VakId,VakNaam,Studiepunten,HandboekId")] Vak vak)
+        public async Task<IActionResult> Create([Bind("VakId,VakNaam,Studiepunten,HandboekId")] VakCreateViewModel model)
         {
+            model.Handboeken = await iPxl.GetHandboeken();
             if (ModelState.IsValid)
             {
-                if (iPxl.GetHandboek(vak.HandboekId) == null)
+                if (iPxl.GetHandboek(model.HandboekId) == null)
                 {
-                    ModelState.AddModelError("", $"Handboek With id {vak.HandboekId} does not exist !");
+                    ModelState.AddModelError("", $"Handboek With id {model.HandboekId} does not exist !");
                     return View();
                 }
-                _context.Add(vak);
-                await _context.SaveChangesAsync();
+                Vak vak = new Vak()
+                {
+                    VakNaam = model.VakNaam,
+                    Studiepunten = model.Studiepunten,
+                    HandboekId = model.HandboekId
+                };
+                await iPxl.AddVak(vak);
                 return RedirectToAction(nameof(Index));
             }
-            return View(vak);
+            return View(model);
         }
 
         // GET: Vak/Edit/5
@@ -78,13 +87,13 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
-            var vak = await _context.Vakken.FindAsync(id);
+            var vak = await iPxl.GetVak(id);
             if (vak == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
             return View(vak);
         }
@@ -98,21 +107,20 @@ namespace HogeschoolPxl.Controllers
         {
             if (id != vak.VakId)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(vak);
-                    await _context.SaveChangesAsync();
+                    await iPxl.UpdateVak(vak);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VakExists(vak.VakId))
+                    if (!iPxl.VakExists(vak.VakId))
                     {
-                        return NotFound();
+                        return RedirecToNotFound(vak.VakId);
                     }
                     else
                     {
@@ -129,14 +137,12 @@ namespace HogeschoolPxl.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirecToNotFound();
             }
-
-            var vak = await _context.Vakken
-                .FirstOrDefaultAsync(m => m.VakId == id);
+            var vak = await iPxl.GetVak(id);
             if (vak == null)
             {
-                return NotFound();
+                return RedirecToNotFound(id);
             }
 
             return View(vak);
@@ -147,15 +153,8 @@ namespace HogeschoolPxl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var vak = await _context.Vakken.FindAsync(id);
-            _context.Vakken.Remove(vak);
-            await _context.SaveChangesAsync();
+            await iPxl.DeleteVak(id);
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool VakExists(int id)
-        {
-            return _context.Vakken.Any(e => e.VakId == id);
         }
         private RedirectToActionResult RedirecToNotFound()
         {
