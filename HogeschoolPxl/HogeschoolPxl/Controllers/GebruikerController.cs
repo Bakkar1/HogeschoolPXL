@@ -179,9 +179,12 @@ namespace HogeschoolPxl.Controllers
         {
             Gebruiker gebruiker = await iPxl.DeleteGebruiker(id);
 
-            //delete existing photo
-            string filePath = Path.Combine(HostingEnvironment.WebRootPath, "images", gebruiker.ImageUrl);
-            System.IO.File.Delete(filePath);
+            if (gebruiker.ImageUrl != null)
+            {
+                //delete existing photo
+                string filePath = Path.Combine(HostingEnvironment.WebRootPath, "images", gebruiker.ImageUrl);
+                System.IO.File.Delete(filePath);
+            }
             return RedirectToAction(nameof(Index));
         }
         private RedirectToActionResult RedirecToNotFound()

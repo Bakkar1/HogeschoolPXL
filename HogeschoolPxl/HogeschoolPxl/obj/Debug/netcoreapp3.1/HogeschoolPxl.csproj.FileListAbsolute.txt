@@ -195,4 +195,3 @@ C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolP
 C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\obj\Debug\netcoreapp3.1\HogeschoolPxl.dll
 C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\obj\Debug\netcoreapp3.1\HogeschoolPxl.pdb
 C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\obj\Debug\netcoreapp3.1\HogeschoolPxl.genruntimeconfig.cache
-C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\obj\Debug\netcoreapp3.1\HogeschoolPxl.csproj.AssemblyReference.cache

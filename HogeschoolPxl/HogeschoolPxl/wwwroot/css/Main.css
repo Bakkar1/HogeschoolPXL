@@ -4,8 +4,8 @@
     --main-color: #e91e63;
     --main-transition: all .5s ease-in-out;
 }
-.pxl-div{
-    position: fixed;
+.pxl-div {
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);

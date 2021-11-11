@@ -60,6 +60,7 @@ namespace HogeschoolPxl.Data
         Task<Student> DeleteStudent(int id);
 
         bool StudentExists(int id);
+        Task<bool> CheckStudent(int gebruikerId);
         #endregion
 
         #region Vak

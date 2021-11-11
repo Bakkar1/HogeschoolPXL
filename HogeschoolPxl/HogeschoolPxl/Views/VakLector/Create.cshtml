@@ -1,4 +1,4 @@
-﻿@model HogeschoolPxl.Models.VakLector
+﻿@model VakLectorCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -10,14 +10,26 @@
     <form asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="LectorId" class="control-label"></label>
-            <input asp-for="LectorId" class="form-control" />
+            <label asp-for="LectorId">Lector</label>
+            <select asp-for="LectorId" class="form-control">
+                <option value="">Please Select</option>
+                @foreach (Lector lector in Model.Lectoren)
+                {
+                    <option value="@lector.LectorId">@lector.Gebruiker.Naam @lector.Gebruiker.VoorNaam</option>
+                }
+            </select>
             <span asp-validation-for="LectorId" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="VakId" class="control-label"></label>
-            <input asp-for="VakId" class="form-control" />
-            <span asp-validation-for="VakId" class="text-danger"></span>
+            <label asp-for="VakId">Vak</label>
+            <select asp-for="VakId" class="form-control">
+                <option value="">Please Select</option>
+                @foreach (Vak vak in Model.Vakken)
+                {
+                    <option value="@vak.VakId">@vak.VakNaam</option>
+                }
+            </select>
+            <span asp-validation-for="LectorId" class="text-danger"></span>
         </div>
         <div class="form-group submit-group">
             <input type="submit" value="Create" class="btn btn-primary" />

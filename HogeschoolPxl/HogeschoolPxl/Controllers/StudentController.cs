@@ -66,9 +66,13 @@ namespace HogeschoolPxl.Controllers
         }
 
         // GET: Student/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            StudentCreateViewModel model = new StudentCreateViewModel()
+            {
+                Gebruikers = await iPxl.GetGebruikers()
+            };
+            return View(model);
         }
 
         // POST: Student/Create
@@ -76,16 +80,32 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StudentId,GebruikerId")] Student student)
+        public async Task<IActionResult> Create([Bind("StudentId,GebruikerId")] StudentCreateViewModel model)
         {
+            model.Gebruikers = await iPxl.GetGebruikers();
             if (ModelState.IsValid)
             {
-                //_context.Add(student);
-                //await _context.SaveChangesAsync();
+                bool isStudent = await iPxl.CheckStudent(model.GebruikerId);
+                if (isStudent)
+                {
+                    ModelState.AddModelError("", $"De Student with gebruiker id {model.GebruikerId} is alredy exist");
+                    return View(model);
+                }
+                var CheckLector = await iPxl.CheckLector(model.GebruikerId);
+                if (CheckLector != null)
+                {
+                    ModelState.AddModelError("", $"Gebruiker with gebruiker id {model.GebruikerId} is a Lector");
+                    return View(model);
+                }
+
+                Student student = new Student()
+                {
+                    GebruikerId = model.GebruikerId
+                };
                 await iPxl.AddStudent(student);
                 return RedirectToAction(nameof(Index));
             }
-            return View(student);
+            return View(model);
         }
 
         // GET: Student/Edit/5
@@ -102,7 +122,14 @@ namespace HogeschoolPxl.Controllers
             {
                 return RedirecToNotFound(id);
             }
-            return View(student);
+            StudentEditViewModel model = new StudentEditViewModel()
+            {
+                StudentId = student.StudentId,
+                GebruikerId = student.GebruikerId,
+                Gebruiker = student.Gebruiker,
+                Gebruikers = await iPxl.GetGebruikers()
+            };
+            return View(model);
         }
 
         // POST: Student/Edit/5
@@ -110,11 +137,25 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("StudentId,GebruikerId")] Student student)
+        public async Task<IActionResult> Edit(int id, [Bind("StudentId,GebruikerId")] StudentEditViewModel model)
         {
-            if (id != student.StudentId)
+            model.Gebruikers = await iPxl.GetGebruikers();
+            if (id != model.StudentId)
             {
                 return RedirecToNotFound();
+            }
+
+            bool isStudent = await iPxl.CheckStudent(model.GebruikerId);
+            if (isStudent)
+            {
+                ModelState.AddModelError("", $"De Student with gebruiker id {model.GebruikerId} is alredy exist");
+                return View(model);
+            }
+            var CheckLector = await iPxl.CheckLector(model.GebruikerId);
+            if (CheckLector != null)
+            {
+                ModelState.AddModelError("", $"Gebruiker with gebruiker id {model.GebruikerId} is a Lector");
+                return View(model);
             }
 
             if (ModelState.IsValid)
@@ -123,11 +164,11 @@ namespace HogeschoolPxl.Controllers
                 {
                     //_context.Update(student);
                     //await _context.SaveChangesAsync();
-                    await iPxl.UpdateStudent(student);
+                    await iPxl.UpdateStudent((Student)model);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!iPxl.StudentExists(student.StudentId))
+                    if (!iPxl.StudentExists(model.StudentId))
                     {
                         return RedirecToNotFound(id);
                     }
@@ -138,7 +179,7 @@ namespace HogeschoolPxl.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(student);
+            return View(model);
         }
 
         // GET: Student/Delete/5

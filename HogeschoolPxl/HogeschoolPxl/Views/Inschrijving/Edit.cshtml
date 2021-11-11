@@ -1,4 +1,4 @@
-﻿@model HogeschoolPxl.Models.Inschrijving
+﻿@model InschrijvingEditViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -11,18 +11,36 @@
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="InschrijvingId" />
         <div class="form-group">
-            <label asp-for="StudentId" class="control-label"></label>
-            <input asp-for="StudentId" class="form-control" />
+            <label asp-for="StudentId">Student</label>
+            <select asp-for="StudentId" class="form-control">
+                <option value="">Please Select</option>
+                @foreach (Student student in Model.Studenten)
+                {
+                    <option value="@student.StudentId">@student.Gebruiker.Naam @student.Gebruiker.VoorNaam</option>
+                }
+            </select>
             <span asp-validation-for="StudentId" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="VakLectorId" class="control-label"></label>
-            <input asp-for="VakLectorId" class="form-control" />
+            <label asp-for="VakLectorId">Vak & Lector</label>
+            <select asp-for="VakLectorId" class="form-control">
+                <option value="">Please Select</option>
+                @foreach (VakLector vakLector in Model.VakLectoren)
+                {
+                    <option value="@vakLector.VakLectorId">@vakLector.Vak.VakNaam : @vakLector.Lector.Gebruiker.Naam</option>
+                }
+            </select>
             <span asp-validation-for="VakLectorId" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="AcademieJaarId" class="control-label"></label>
-            <input asp-for="AcademieJaarId" class="form-control" />
+            <label asp-for="AcademieJaarId">AcademieJaar</label>
+            <select asp-for="AcademieJaarId" class="form-control">
+                <option value="">Please Select</option>
+                @foreach (AcademieJaar academieJaar in Model.AcademieJaren)
+                {
+                    <option value="@academieJaar.AcademieJaarId">@academieJaar.StartDatum.ToLongDateString()</option>
+                }
+            </select>
             <span asp-validation-for="AcademieJaarId" class="text-danger"></span>
         </div>
         <div class="form-group submit-group">

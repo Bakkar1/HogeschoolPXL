@@ -66,5 +66,10 @@ namespace HogeschoolPxl.Data
         {
             return _context.Students.Any(e => e.StudentId == id);
         }
+        public async Task<bool> CheckStudent(int gebruikerId)
+        {
+            var result = await _context.Students.Where(l => l.GebruikerId == gebruikerId).FirstOrDefaultAsync();
+            return result != null;
+        }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
 using HogeschoolPxl.Helpers;
+using HogeschoolPxl.ViewModels;
 
 namespace HogeschoolPxl.Controllers
 {
@@ -50,9 +51,15 @@ namespace HogeschoolPxl.Controllers
         }
 
         // GET: Inschrijving/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            InschrijvingCreateViewModel model = new InschrijvingCreateViewModel()
+            {
+                Studenten = await iPxl.GetStudenten(),
+                VakLectoren = await iPxl.GetVakLectoren(),
+                AcademieJaren = await iPxl.GetAcademieJaren()
+            };
+            return View(model);
         }
 
         // POST: Inschrijving/Create
@@ -60,27 +67,27 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("InschrijvingId,StudentId,VakLectorId,AcademieJaarId")] Inschrijving inschrijving)
+        public async Task<IActionResult> Create([Bind("InschrijvingId,StudentId,VakLectorId,AcademieJaarId")] InschrijvingCreateViewModel model)
         {
             if (ModelState.IsValid)
             {
-                Student std = await iPxl.GetStudent(inschrijving.StudentId);
-                if(std == null) ModelState.AddModelError("", $"We could not find a student with id : {inschrijving.StudentId}");
+                Student std = await iPxl.GetStudent(model.StudentId);
+                if(std == null) ModelState.AddModelError("", $"We could not find a student with id : {model.StudentId}");
                 
-                VakLector vakL = await iPxl.GetVakLectorByLector(inschrijving.VakLectorId);
+                VakLector vakL = await iPxl.GetVakLectorByLector(model.VakLectorId);
 
-                if (vakL == null) ModelState.AddModelError("", $"We could not find a vak lector with id : {inschrijving.VakLectorId}");
+                if (vakL == null) ModelState.AddModelError("", $"We could not find a vak lector with id : {model.VakLectorId}");
 
-                AcademieJaar academie = await iPxl.GetAcademieJaar(inschrijving.AcademieJaarId);
+                AcademieJaar academie = await iPxl.GetAcademieJaar(model.AcademieJaarId);
 
-                if (academie == null) ModelState.AddModelError("", $"We could not find an acadieme jaar with id : {inschrijving.AcademieJaarId}");
+                if (academie == null) ModelState.AddModelError("", $"We could not find an acadieme jaar with id : {model.AcademieJaarId}");
 
-                if (std == null || vakL == null || academie ==null) return View(inschrijving);
+                if (std == null || vakL == null || academie ==null) return View(model);
 
-                await iPxl.AddInschrijving(inschrijving);
+                await iPxl.AddInschrijving((Inschrijving)model);
                 return RedirectToAction(nameof(Index));
             }
-            return View(inschrijving);
+            return View(model);
         }
 
         // GET: Inschrijving/Edit/5
@@ -96,7 +103,20 @@ namespace HogeschoolPxl.Controllers
             {
                 return NotFound();
             }
-            return View(inschrijving);
+            InschrijvingEditViewModel model = new InschrijvingEditViewModel()
+            {
+                InschrijvingId = inschrijving.InschrijvingId,
+                StudentId = inschrijving.StudentId,
+                Student = inschrijving.Student,
+                VakLectorId = inschrijving.VakLectorId,
+                VakLector = inschrijving.VakLector,
+                AcademieJaarId = inschrijving.AcademieJaarId,
+                AcademieJaar = inschrijving.AcademieJaar,
+                Studenten = await iPxl.GetStudenten(),
+                VakLectoren = await iPxl.GetVakLectoren(),
+                AcademieJaren = await iPxl.GetAcademieJaren()
+            };
+            return View(model);
         }
 
         // POST: Inschrijving/Edit/5
@@ -104,9 +124,9 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("InschrijvingId,StudentId,VakLectorId,AcademieJaarId")] Inschrijving inschrijving)
+        public async Task<IActionResult> Edit(int id, [Bind("InschrijvingId,StudentId,VakLectorId,AcademieJaarId")] InschrijvingEditViewModel model)
         {
-            if (id != inschrijving.InschrijvingId)
+            if (id != model.InschrijvingId)
             {
                 return NotFound();
             }
@@ -115,11 +135,11 @@ namespace HogeschoolPxl.Controllers
             {
                 try
                 {
-                    await iPxl.UpdateInschrijving(inschrijving);
+                    await iPxl.UpdateInschrijving((Inschrijving)model);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!iPxl.InschrijvingExists(inschrijving.InschrijvingId))
+                    if (!iPxl.InschrijvingExists(model.InschrijvingId))
                     {
                         return NotFound();
                     }
@@ -130,7 +150,7 @@ namespace HogeschoolPxl.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(inschrijving);
+            return View(model);
         }
 
         // GET: Inschrijving/Delete/5

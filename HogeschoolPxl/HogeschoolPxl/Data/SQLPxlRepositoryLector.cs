@@ -16,7 +16,10 @@ namespace HogeschoolPxl.Data
 
         public async Task<Lector> GetLector(int? id)
         {
-            return await _context.Lectoren.FindAsync(id);
+            return await _context.Lectoren
+               .Include(s => s.Gebruiker)
+               .Where(s => s.LectorId == id)
+               .FirstOrDefaultAsync();
         }
         public async Task<IEnumerable<Lector>> GetLectorenByName(string searchName)
         {

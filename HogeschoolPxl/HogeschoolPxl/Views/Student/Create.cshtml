@@ -1,4 +1,4 @@
-﻿@model HogeschoolPxl.Models.Student
+﻿@model StudentCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -11,8 +11,14 @@
     <form asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="GebruikerId" class="control-label"></label>
-            <input asp-for="GebruikerId" class="form-control" />
+            <label asp-for="GebruikerId">Tekomstige Lector</label>
+            <select asp-for="GebruikerId" class="form-control">
+                <option value="">Please Select</option>
+                @foreach (Gebruiker gebruiker in Model.Gebruikers)
+                {
+                    <option value="@gebruiker.GebruikerId">@gebruiker.Naam @gebruiker.VoorNaam</option>
+                }
+            </select>
             <span asp-validation-for="GebruikerId" class="text-danger"></span>
         </div>
         <div class="form-group submit-group">

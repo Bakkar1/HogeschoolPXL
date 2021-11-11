@@ -78,6 +78,12 @@ namespace HogeschoolPxl.Controllers
                     ModelState.AddModelError("", $"Lector with gebruiker id {model.GebruikerId} alredy exist");
                     return View(model);
                 }
+                bool isStudent = await iPxl.CheckStudent(model.GebruikerId);
+                if (isStudent)
+                {
+                    ModelState.AddModelError("", $"De gebruiker with gebruiker id {model.GebruikerId} is een student");
+                    return View(model);
+                }
                 Lector lector = new Lector()
                 {
                     GebruikerId = model.GebruikerId
@@ -100,7 +106,14 @@ namespace HogeschoolPxl.Controllers
             {
                 return RedirecToNotFound(id);
             }
-            return View(lector);
+            LectorEditViewModel model = new LectorEditViewModel()
+            {
+                LectorId = lector.LectorId,
+                GebruikerId = lector.GebruikerId,
+                Gebruiker = lector.Gebruiker,
+                Gebruikers = await iPxl.GetGebruikers()
+            };
+            return View(model);
         }
 
         // POST: Lector/Edit/5
@@ -108,24 +121,38 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LectorId,GebruikerId")] Lector lector)
+        public async Task<IActionResult> Edit(int id, [Bind("LectorId,GebruikerId")] LectorEditViewModel model)
         {
-            if (id != lector.LectorId)
+            model.Gebruikers = await iPxl.GetGebruikers();
+            if (id != model.LectorId)
             {
                 return RedirecToNotFound();
+            }
+
+            var CheckLector = await iPxl.CheckLector(model.GebruikerId);
+            if (CheckLector != null)
+            {
+                ModelState.AddModelError("", $"Lector with gebruiker id {model.GebruikerId} alredy exist");
+                return View(model);
+            }
+            bool isStudent = await iPxl.CheckStudent(model.GebruikerId);
+            if (isStudent)
+            {
+                ModelState.AddModelError("", $"De gebruiker with gebruiker id {model.GebruikerId} is een student");
+                return View(model);
             }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await iPxl.UpdateLector(lector);
+                    await iPxl.UpdateLector((Lector)model);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!iPxl.LectorExists(lector.LectorId))
+                    if (!iPxl.LectorExists(model.LectorId))
                     {
-                        return RedirecToNotFound(lector.LectorId);
+                        return RedirecToNotFound(model.LectorId);
                     }
                     else
                     {
@@ -134,7 +161,7 @@ namespace HogeschoolPxl.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(lector);
+            return View(model);
         }
 
         // GET: Lector/Delete/5
