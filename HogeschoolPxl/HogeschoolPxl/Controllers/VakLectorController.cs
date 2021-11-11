@@ -62,7 +62,7 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("VakLectorId,LectorId,GebruikerId")] VakLector vakLector)
+        public async Task<IActionResult> Create([Bind("VakLectorId,LectorId,GebruikerId,VakId")] VakLector vakLector)
         {
             if (ModelState.IsValid)
             {

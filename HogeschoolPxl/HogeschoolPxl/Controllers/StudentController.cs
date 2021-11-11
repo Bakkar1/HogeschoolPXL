@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
 using HogeschoolPxl.Helpers;
+using HogeschoolPxl.ViewModels;
 
 namespace HogeschoolPxl.Controllers
 {
@@ -28,6 +29,7 @@ namespace HogeschoolPxl.Controllers
             //return View(await _context.students.Include(s => s.Gebruiker).ToListAsync());
             return View(await iPxl.GetStudenten());
         }
+
         // GET: Student/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -44,7 +46,23 @@ namespace HogeschoolPxl.Controllers
                 return RedirecToNotFound(id);
             }
 
-            return View(student);
+            StudentDetailsViewModel model = new StudentDetailsViewModel()
+            {
+                Student = student,
+                Inschrijvingen = await iPxl.GetStudentOverzicht(student.StudentId)
+            };
+            return View(model);
+        }
+
+        public async Task<IActionResult> GetPartial(string searchName)
+        {
+            if (string.IsNullOrEmpty(searchName))
+            {
+                return PartialView("StudentCard", await iPxl.GetStudenten());
+            }
+            var studenten = await iPxl.GetStudentenByName(searchName);
+
+            return PartialView("StudentCard", studenten);
         }
 
         // GET: Student/Create

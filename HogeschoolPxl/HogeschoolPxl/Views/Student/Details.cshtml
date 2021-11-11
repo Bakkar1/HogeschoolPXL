@@ -1,24 +1,41 @@
-﻿@model HogeschoolPxl.Models.Student
+﻿@model StudentDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
+    var photoPath = "/images/" + (Model.Student.Gebruiker.ImageUrl ?? "nogebruiker.png");
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Student</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.GebruikerId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.GebruikerId)
-        </dd>
-    </dl>
+<h3 class="cat-heading">Details @Model.Student.Gebruiker.Naam</h3>
+<div class="overzicht-card">
+    <img src="@photoPath" alt="profile foto">
+    <h3>
+        @Model.Student.Gebruiker.Naam @Model.Student.Gebruiker.VoorNaam
+    </h3>
+    <a href="@Model.Student.Gebruiker.Email"> @Model.Student.Gebruiker.Email</a>
+    <div class="links">
+        <a class="btn btn-outline-success" asp-action="Edit" asp-route-id="@Model.Student.StudentId">Edit</a>
+        <a asp-action="Index" class="btn btn-outline-primary">Back to List</a>
+    </div>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.StudentId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @if (Model.Inschrijvingen.Any())
+    {
+        foreach (var inschrijving in Model.Inschrijvingen)
+        {
+            <div class="card m-1">
+                <div class="card-header bg-blue">
+                    @inschrijving.VakLector.Vak.VakNaam
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">Academiejaar @inschrijving.AcademieJaar.StartDatum.Year/@inschrijving.AcademieJaar.StartDatum.AddYears(1).Year</h5>
+                    <p class="card-text">
+                        @inschrijving.VakLector.Vak.Studiepunten Studie Punten
+                    </p>
+                    <div>
+                        Handboek @inschrijving.VakLector.Vak.Handboek.Title
+                    </div>
+                </div>
+            </div>
+        };
+    }
 </div>

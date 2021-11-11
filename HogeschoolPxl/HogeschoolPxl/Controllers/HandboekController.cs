@@ -159,8 +159,11 @@ namespace HogeschoolPxl.Controllers
             Handboek handboek = await iPxl.DeleteHandboek(id);
 
             //delete existing photo
-            string filePath = Path.Combine(HostingEnvironment.WebRootPath, "images", handboek.Afbeelding);
-            System.IO.File.Delete(filePath);
+            if (handboek.Afbeelding != null)
+            {
+                string filePath = Path.Combine(HostingEnvironment.WebRootPath, "images", handboek.Afbeelding);
+                System.IO.File.Delete(filePath);
+            }
 
             return RedirectToAction(nameof(Index));
         }

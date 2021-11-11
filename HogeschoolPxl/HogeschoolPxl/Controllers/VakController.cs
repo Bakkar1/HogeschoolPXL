@@ -89,13 +89,21 @@ namespace HogeschoolPxl.Controllers
             {
                 return RedirecToNotFound();
             }
-
             var vak = await iPxl.GetVak(id);
             if (vak == null)
             {
                 return RedirecToNotFound(id);
             }
-            return View(vak);
+
+            VakEditViewModel model = new VakEditViewModel()
+            {
+                VakId = vak.VakId,
+                VakNaam = vak.VakNaam,
+                Studiepunten = vak.Studiepunten,
+                HandboekId = vak.HandboekId,
+                Handboeken = await iPxl.GetHandboeken()
+            };
+            return View(model);
         }
 
         // POST: Vak/Edit/5
@@ -103,9 +111,10 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("VakId,VakNaam,Studiepunten,HandboekId")] Vak vak)
+        public async Task<IActionResult> Edit(int id, [Bind("VakId,VakNaam,Studiepunten,HandboekId")] VakEditViewModel model)
         {
-            if (id != vak.VakId)
+            model.Handboeken = await iPxl.GetHandboeken();
+            if (id != model.VakId)
             {
                 return RedirecToNotFound();
             }
@@ -114,13 +123,13 @@ namespace HogeschoolPxl.Controllers
             {
                 try
                 {
-                    await iPxl.UpdateVak(vak);
+                    await iPxl.UpdateVak((Vak)model);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!iPxl.VakExists(vak.VakId))
+                    if (!iPxl.VakExists(model.VakId))
                     {
-                        return RedirecToNotFound(vak.VakId);
+                        return RedirecToNotFound(model.VakId);
                     }
                     else
                     {
@@ -129,7 +138,7 @@ namespace HogeschoolPxl.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(vak);
+            return View(model);
         }
 
         // GET: Vak/Delete/5

@@ -1,13 +1,32 @@
-﻿@model Lector
-@{ 
-    var photoPath = "/images/" + (Model.Gebruiker.ImageUrl ?? "nogebruiker.png");
-}
-<section>
-    <img src="@photoPath" asp-append-version="true" alt="palmaers">
-    <span>@Model.Gebruiker.Naam</span>
-    <div class="links">
-        <a asp-action="Edit" asp-route-id="@Model.LectorId" class="btn btn-primary">Edit</a>
-        <a asp-action="Details" asp-route-id="@Model.LectorId" class="btn btn-info">Details</a>
-        <a asp-action="Delete" asp-route-id="@Model.LectorId" class="btn btn-danger">Delete</a>
+﻿@model IEnumerable<HogeschoolPxl.Models.Lector>
+
+
+@if (!Model.Any())
+{
+    <div>
+        No item founded
     </div>
-</section>
+}
+else
+{
+    <div class="lectoren" id="panel">
+        <div style="width: 100%">
+            @foreach (Lector lector in Model)
+            {
+            var photoPath = "/images/" + (lector.Gebruiker.ImageUrl ?? "nogebruiker.png");
+
+            <section>
+                <img src="@photoPath" asp-append-version="true" alt="palmaers">
+                <span>@lector.Gebruiker.Naam</span>
+                <div class="links">
+                    <a asp-action="Edit" asp-route-id="@lector.LectorId" class="btn btn-primary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@lector.LectorId" class="btn btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@lector.LectorId" class="btn btn-danger">Delete</a>
+                </div>
+            </section>
+
+            }
+
+        </div>
+    </div>
+}

@@ -5,53 +5,48 @@
     var photoPath = "/images/" + (Model.ExistingPhotoPath ?? "NoBoek.jpeg");
 }
 
-<h1>Edit</h1>
+<h4 class="cat-heading">Edit Handboek</h4>
 
-<h4>Handboek</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form enctype="multipart/form-data" asp-action="Edit" method="post">
-            <input hidden asp-for="HelperId" />
-            <input hidden asp-for="ExistingPhotoPath" />
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="HandboekId" />
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="KostPrijs" class="control-label"></label>
-                <input asp-for="KostPrijs" class="form-control" />
-                <span asp-validation-for="KostPrijs" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UitGifteDatum" class="control-label"></label>
-                <input asp-for="UitGifteDatum" class="form-control" />
-                <span asp-validation-for="UitGifteDatum" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Photo"></label>
-                <div>
-                    <div class="custom-file">
-                        <input asp-for="Photo" class="form-control custom-file-input" />
-                        <label class="custom-file-label">Click here to change photo</label>
-                    </div>
+<div class="form-container">
+    <form enctype="multipart/form-data" asp-action="Edit" method="post">
+        <input hidden asp-for="HelperId" />
+        <input hidden asp-for="ExistingPhotoPath" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="HandboekId" />
+        <div class="form-group">
+            <label asp-for="Title" class="control-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="KostPrijs" class="control-label"></label>
+            <input asp-for="KostPrijs" class="form-control" />
+            <span asp-validation-for="KostPrijs" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="UitGifteDatum" class="control-label"></label>
+            <input asp-for="UitGifteDatum" class="form-control" />
+            <span asp-validation-for="UitGifteDatum" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Photo"></label>
+            <div>
+                <div class="custom-file form-control">
+                    <input asp-for="Photo" class="form-control custom-file-input" />
+                    <label class="custom-file-label">Click here to change photo</label>
                 </div>
             </div>
-            <div class="form-group">
-                <img src="@photoPath" asp-append-version="true" style="height:200px;width:auto;" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+        <div class="form-group">
+            <img src="@photoPath" asp-append-version="true" style="height:200px;width:auto;" />
+        </div>
+        <div class="form-group submit-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    </form>
+    <div class="form-group">
+        <a asp-action="Index" class="btn btn-outline-primary">Back to List</a>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

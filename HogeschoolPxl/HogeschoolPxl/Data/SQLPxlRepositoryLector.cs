@@ -18,7 +18,13 @@ namespace HogeschoolPxl.Data
         {
             return await _context.Lectoren.FindAsync(id);
         }
-
+        public async Task<IEnumerable<Lector>> GetLectorenByName(string searchName)
+        {
+            var result = await _context.Lectoren
+                    .Where(s => s.Gebruiker.Naam.ToLower() == searchName.ToLower() || s.Gebruiker.VoorNaam.ToLower() == searchName.ToLower())
+                    .Include(s => s.Gebruiker).ToListAsync();
+            return result;
+        }
         public async Task<Lector> AddLector(Lector lector)
         {
             _context.Lectoren.Add(lector);

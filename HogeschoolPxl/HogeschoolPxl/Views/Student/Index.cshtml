@@ -9,13 +9,18 @@
 
 <h3 class="cat-heading">Studenten</h3>
 
-
-<p>
-    <a class="btn btn-outline-success" asp-action="Create">Create New</a>
-</p>
-<div class="custom-container">
-    @foreach (Student student in Model)
-    {
-        <partial name="StudentCard" model="@student" />
-    }
+<div class="d-flex flex-wrap justify-content-between align-content-center m-2">
+    <a class="btn btn-outline-success" style="height: 40px" asp-action="Create">Create New</a>
+    <form id="my_form" asp-action="Face" method="get" data-ajax="true" data-ajax-method="get" data-ajax-update="#panel" data-ajax-mode='replace' data-ajax-url="@Url.Action("GetPartial","Student")">
+        <div class="form-group" style="width: 300px">
+            <input name="searchName" class="form-control" placeholder="zoek student" type="text" />
+            <input hidden class="btn btn-info float-right" type="submit" value="Search" />
+        </div>
+    </form>
 </div>
+
+<partial name="StudentCard" model="@Model" />
+
+@section scriptsAjax{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+}

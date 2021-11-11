@@ -16,9 +16,30 @@ namespace HogeschoolPxl.Data
 
         public async Task<Student> GetStudent(int? id)
         {
-            return await _context.Students.FindAsync(id);
+            return await _context.Students
+                .Include(s => s.Gebruiker)
+                .Where(s => s.StudentId == id)
+                .FirstOrDefaultAsync();
         }
-
+        public async Task<IEnumerable<Student>> GetStudentenByName(string nameOrFirstName)
+        {
+            var result = await _context.Students
+                    .Where(s => s.Gebruiker.Naam.ToLower() == nameOrFirstName.ToLower() || s.Gebruiker.VoorNaam.ToLower() == nameOrFirstName.ToLower())
+                    .Include(s => s.Gebruiker).ToListAsync();
+            return result;
+        }
+        public async Task<IEnumerable<Inschrijving>> GetStudentOverzicht(int? id)
+        {
+            var result =  await _context.Inschrijvingen
+                        .Include(v => v.VakLector.Lector)
+                        .Include(v => v.VakLector.Vak)
+                        .Include(v => v.VakLector.Vak.Handboek)
+                        .Include(v => v.AcademieJaar)
+                        .Where(i => i.Student.StudentId == id)
+                        .OrderByDescending(i => i.AcademieJaar.StartDatum)
+                        .ToListAsync();
+            return result;
+        }
         public async Task<Student> AddStudent(Student student)
         {
             _context.Students.Add(student);

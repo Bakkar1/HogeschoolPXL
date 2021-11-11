@@ -42,7 +42,16 @@ namespace HogeschoolPxl.Controllers
 
             return View(lector);
         }
+        public async Task<IActionResult> GetPartial(string searchName)
+        {
+            if (string.IsNullOrEmpty(searchName))
+            {
+                return PartialView("LectorCard", await iPxl.GetLectoren());
+            }
+            var studenten = await iPxl.GetLectorenByName(searchName);
 
+            return PartialView("LectorCard", studenten);
+        }
         // GET: Lector/Create
         public async Task<IActionResult> Create()
         {

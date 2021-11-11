@@ -8,14 +8,18 @@
 }
 <h3 class="cat-heading">Lectoren</h3>
 
-<p>
-    <a class="btn btn-outline-success" asp-action="Create">Create New</a>
-</p>
-<div class="lectoren">
-    <div>
-        @foreach (Lector lector in Model)
-        {
-            <partial name="LectorCard" model="@lector" />
-        }
-    </div>
+<div class="d-flex justify-content-between align-content-center m-2">
+    <a class="btn btn-outline-success" style="height: 40px" asp-action="Create">Create New</a>
+    <form id="my_form" asp-action="Face" method="get" data-ajax="true" data-ajax-method="get" data-ajax-update="#panel" data-ajax-mode='replace' data-ajax-url="@Url.Action("GetPartial","Lector")">
+        <div class="form-group" style="width: 300px">
+            <input name="searchName" class="form-control" placeholder="zoek student" type="text" />
+            <input hidden class="btn btn-info float-right" type="submit" value="Search" />
+        </div>
+    </form>
 </div>
+
+<partial name="LectorCard" model="@Model" />
+
+@section scriptsAjax{
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajax-unobtrusive/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+}

@@ -42,6 +42,7 @@ namespace HogeschoolPxl.Data
         #region Lector
         Task<IEnumerable<Lector>> GetLectoren();
         Task<Lector> GetLector(int? id);
+        Task<IEnumerable<Lector>> GetLectorenByName(string nameOrFirstName);
         Task<Lector> AddLector(Lector lector);
         Task<Lector> UpdateLector(Lector Lector);
         Task<Lector> DeleteLector(int id);
@@ -52,6 +53,8 @@ namespace HogeschoolPxl.Data
         #region Student
         Task<IEnumerable<Student>> GetStudenten();
         Task<Student> GetStudent(int? id);
+        Task<IEnumerable<Inschrijving>> GetStudentOverzicht(int? id);
+        Task<IEnumerable<Student>> GetStudentenByName(string nameOrFirstName);
         Task<Student> AddStudent(Student student);
         Task<Student> UpdateStudent(Student student);
         Task<Student> DeleteStudent(int id);

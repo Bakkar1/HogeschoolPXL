@@ -109,7 +109,7 @@ namespace HogeschoolPxl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, GebruikerEditViewModel model)
         {
-            if (id != model.GebruikerId)
+            if (id != model.HelperId)
             {
                 return RedirecToNotFound();
             }
