@@ -74,8 +74,6 @@ namespace HogeschoolPxl.Controllers
                     UitGifteDatum = model.UitGifteDatum,
                     Afbeelding = uniqueFileName,
                 };
-                //_context.Add(handboek);
-                //_context.SaveChanges();
                 await iPxl.AddHandboek(handboek);
                 return RedirectToAction("index");
             }

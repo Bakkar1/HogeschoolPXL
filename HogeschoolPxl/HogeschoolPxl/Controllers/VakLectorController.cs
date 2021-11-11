@@ -14,12 +14,10 @@ namespace HogeschoolPxl.Controllers
 {
     public class VakLectorController : Controller
     {
-        private readonly AppDbContext _context;
         private readonly IPxl iPxl;
 
-        public VakLectorController(AppDbContext context, IPxl iPxl)
+        public VakLectorController(IPxl iPxl)
         {
-            _context = context;
             this.iPxl = iPxl;
         }
 

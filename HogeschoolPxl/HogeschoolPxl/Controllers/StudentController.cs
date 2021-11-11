@@ -26,7 +26,6 @@ namespace HogeschoolPxl.Controllers
         // GET: Student
         public async Task<IActionResult> Index()
         {
-            //return View(await _context.students.Include(s => s.Gebruiker).ToListAsync());
             return View(await iPxl.GetStudenten());
         }
 
@@ -38,8 +37,6 @@ namespace HogeschoolPxl.Controllers
                 return RedirecToNotFound();
             }
 
-            //var student = await _context.students
-            //    .FirstOrDefaultAsync(m => m.StudentId == id);
             var student = await iPxl.GetStudent(id);
             if (student == null)
             {
@@ -116,7 +113,6 @@ namespace HogeschoolPxl.Controllers
                 return RedirecToNotFound();
             }
 
-            //var student = await _context.students.FindAsync(id);
             var student = await iPxl.GetStudent(id);
             if (student == null)
             {
@@ -162,8 +158,6 @@ namespace HogeschoolPxl.Controllers
             {
                 try
                 {
-                    //_context.Update(student);
-                    //await _context.SaveChangesAsync();
                     await iPxl.UpdateStudent((Student)model);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -190,8 +184,6 @@ namespace HogeschoolPxl.Controllers
                 return RedirecToNotFound();
             }
 
-            //var student = await _context.students
-            //    .FirstOrDefaultAsync(m => m.StudentId == id);
             var student = await iPxl.GetStudent(id);
             if (student == null)
             {
@@ -206,9 +198,6 @@ namespace HogeschoolPxl.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            //var student = await _context.students.FindAsync(id);
-            //_context.students.Remove(student);
-            //await _context.SaveChangesAsync();
             await iPxl.DeleteStudent(id);
             return RedirectToAction(nameof(Index));
         }
