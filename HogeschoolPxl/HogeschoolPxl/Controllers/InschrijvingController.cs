@@ -9,9 +9,12 @@ using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
 using HogeschoolPxl.Helpers;
 using HogeschoolPxl.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using HogeschoolPxl.Data.Default;
 
 namespace HogeschoolPxl.Controllers
 {
+    [Authorize(Roles = Roles.AdminRole)]
     public class InschrijvingController : Controller
     {
         private readonly IPxl iPxl;

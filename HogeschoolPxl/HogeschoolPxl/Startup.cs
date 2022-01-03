@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using HogeschoolPxl.Data;
 using Microsoft.EntityFrameworkCore;
 using HogeschoolPxl.Data.Default;
+using Microsoft.AspNetCore.Identity;
 
 namespace HogeschoolPxl
 {
@@ -32,6 +33,18 @@ namespace HogeschoolPxl
                        );
             services.AddRazorPages();
             services.AddScoped<IPxl, PartialSQLPxlRepository>();
+
+            services.AddIdentity<IdentityUser, IdentityRole>(
+                options =>
+                {
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 4;
+                    options.User.RequireUniqueEmail = true;
+                })
+                .AddEntityFrameworkStores<AppDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,6 +66,7 @@ namespace HogeschoolPxl
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

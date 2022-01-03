@@ -11,9 +11,12 @@ using HogeschoolPxl.Helpers;
 using Microsoft.AspNetCore.Hosting;
 using HogeschoolPxl.ViewModels;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
+using HogeschoolPxl.Data.Default;
 
 namespace HogeschoolPxl.Controllers
 {
+    [Authorize(Roles = Roles.AdminRole)]
     public class GebruikerController : Controller
     {
         private readonly IPxl iPxl;

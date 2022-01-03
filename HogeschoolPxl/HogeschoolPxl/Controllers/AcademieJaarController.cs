@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
 using HogeschoolPxl.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using HogeschoolPxl.Data.Default;
 
 namespace HogeschoolPxl.Controllers
 {
+    [Authorize(Roles = Roles.AdminRole)]
     public class AcademieJaarController : Controller
     {
         private readonly IPxl iPxl;

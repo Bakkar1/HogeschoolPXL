@@ -9,9 +9,12 @@ using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
 using HogeschoolPxl.ViewModels;
 using HogeschoolPxl.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using HogeschoolPxl.Data.Default;
 
 namespace HogeschoolPxl.Controllers
 {
+    [Authorize(Roles = Roles.AdminRole)]
     public class LectorController : Controller
     {
         private readonly IPxl iPxl;
@@ -26,7 +29,6 @@ namespace HogeschoolPxl.Controllers
         {
             return View(await iPxl.GetLectoren());
         }
-
         // GET: Lector/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -178,6 +180,11 @@ namespace HogeschoolPxl.Controllers
             }
 
             return View(lector);
+        }
+
+        public async Task<IActionResult> OwnCourses(int lectorId)
+        {
+            return View(await iPxl.GetEigenVakken(lectorId));
         }
 
         // POST: Lector/Delete/5

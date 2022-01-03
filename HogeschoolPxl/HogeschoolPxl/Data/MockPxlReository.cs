@@ -1,4 +1,5 @@
 ﻿using HogeschoolPxl.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HogeschoolPxl.Data
 {
-    public class MockPxlReository : IPxl
+    public class MockPxlReository
     {
         public List<Gebruiker> Gebruikers;
         public List<Vak> Vakken;
@@ -375,6 +376,21 @@ namespace HogeschoolPxl.Data
         }
 
         public bool AcademieJaarExists(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<VakLector>> GetEigenVakken(int lectorId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SelectList GetRoles()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> IsCurrentUserAlector()
         {
             throw new NotImplementedException();
         }

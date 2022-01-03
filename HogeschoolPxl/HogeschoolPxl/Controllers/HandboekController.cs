@@ -11,10 +11,12 @@ using HogeschoolPxl.ViewModels;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using HogeschoolPxl.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using HogeschoolPxl.Data.Default;
 
 namespace HogeschoolPxl.Controllers
 {
-
+    [Authorize(Roles = Roles.StudentRole + "," + Roles.AdminRole + "," + Roles.LectorRole)]
     public class HandboekController : Controller
     {
         private readonly IPxl iPxl;
@@ -31,6 +33,10 @@ namespace HogeschoolPxl.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await iPxl.GetHandboeken());
+        }
+        public async Task<IActionResult> LectorHandboeken()
+        {
+            return View("Index", await iPxl.GetHandboeken());
         }
 
         // GET: Handboek/Details/5
@@ -51,6 +57,7 @@ namespace HogeschoolPxl.Controllers
         }
 
         // GET: Handboek/Create
+        [Authorize(Roles = Roles.AdminRole)]
         public IActionResult Create()
         {
             return View();
@@ -61,6 +68,7 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> Create(HandboekCreateViewModel model)
         {
             if (ModelState.IsValid)
@@ -81,6 +89,7 @@ namespace HogeschoolPxl.Controllers
         }
 
         // GET: Handboek/Edit/5
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -105,6 +114,7 @@ namespace HogeschoolPxl.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> Edit(HandboekEditViewModel model)
         {
             if (ModelState.IsValid)
@@ -133,6 +143,7 @@ namespace HogeschoolPxl.Controllers
         }
 
         // GET: Handboek/Delete/5
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -152,6 +163,7 @@ namespace HogeschoolPxl.Controllers
         // POST: Handboek/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             Handboek handboek = await iPxl.DeleteHandboek(id);

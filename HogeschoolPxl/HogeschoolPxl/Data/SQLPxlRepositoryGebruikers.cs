@@ -1,4 +1,6 @@
 ﻿using HogeschoolPxl.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,14 +12,21 @@ namespace HogeschoolPxl.Data
     public partial class PartialSQLPxlRepository : IPxl
     {
         private readonly AppDbContext _context;
-        public PartialSQLPxlRepository(AppDbContext context)
+        private readonly RoleManager<IdentityRole> roleManager;
+        private readonly UserManager<IdentityUser> userManager;
+        public PartialSQLPxlRepository(AppDbContext context,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<IdentityUser> userManager)
         {
             _context = context;
+            this.roleManager = roleManager;
+            this.userManager = userManager;
         }
         public async Task<IEnumerable<Gebruiker>> GetGebruikers()
         {
             return await _context.Gebruikers.ToListAsync();
         }
+
         public async Task<Gebruiker> GetGebruiker(int? id)
         {
             return await _context.Gebruikers.FindAsync(id);

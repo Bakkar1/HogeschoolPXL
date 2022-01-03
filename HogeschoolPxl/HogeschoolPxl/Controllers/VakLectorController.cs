@@ -9,9 +9,12 @@ using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
 using HogeschoolPxl.Helpers;
 using HogeschoolPxl.ViewModels;
+using HogeschoolPxl.Data.Default;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HogeschoolPxl.Controllers
 {
+    [Authorize(Roles = Roles.AdminRole)]
     public class VakLectorController : Controller
     {
         private readonly IPxl iPxl;

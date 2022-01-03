@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using HogeschoolPxl.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace HogeschoolPxl.Data
 {
     public interface IPxl
     {
+        SelectList GetRoles();
+        Task<string> CurrentUserRoleName();
         #region Gebruiker
         Task<IEnumerable<Gebruiker>> GetGebruikers();
         Task<Gebruiker> GetGebruiker(int? id);
@@ -48,6 +52,7 @@ namespace HogeschoolPxl.Data
         Task<Lector> DeleteLector(int id);
         bool LectorExists(int id);
         Task<Lector> CheckLector(int id);
+        Task<IEnumerable<VakLector>> GetEigenVakken(int lectorId);
         #endregion
 
         #region Student
@@ -75,6 +80,7 @@ namespace HogeschoolPxl.Data
 
         #region VakLector
         Task<IEnumerable<VakLector>> GetVakLectoren();
+        Task<IEnumerable<Vak>> GetLectorVakken(int lectorId);
         Task<VakLector> GetVakLector(int? id);
         Task<VakLector> GetVakLectorByLector(int vakLecotrId);
         Task<VakLector> AddVakLector(VakLector vakLector);

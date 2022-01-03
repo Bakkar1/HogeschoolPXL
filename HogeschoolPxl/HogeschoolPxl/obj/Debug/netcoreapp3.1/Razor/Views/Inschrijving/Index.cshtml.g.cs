@@ -40,8 +40,22 @@ using HogeschoolPxl.ViewModels;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 7 "C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\Views\_ViewImports.cshtml"
+using Microsoft.AspNetCore.Identity;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 8 "C:\Users\mbark\OneDrive\Documents\GitHub\HogeschoolPXL\HogeschoolPxl\HogeschoolPxl\Views\_ViewImports.cshtml"
+using HogeschoolPxl.Data;
+
+#line default
+#line hidden
+#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"e84acbc0a1a6bf9a7e6c4d4f1f35c16737d25674", @"/Views/Inschrijving/Index.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"7cce6ea52ed14aca5f7bf8bbdbbcda5673260f6a", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"0d1feab58c00ca484cb5a6c3c94972fc365d9775", @"/Views/_ViewImports.cshtml")]
     public class Views_Inschrijving_Index : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<IEnumerable<HogeschoolPxl.Models.Inschrijving>>
     {
         private global::AspNetCore.Views_Inschrijving_Index.__Generated__InschrijvingMenuViewComponentTagHelper __InschrijvingMenuViewComponentTagHelper;
@@ -83,7 +97,7 @@ using HogeschoolPxl.ViewModels;
 #nullable disable
             DefineSection("InschrijvingStyle", async() => {
                 WriteLiteral("\r\n    ");
-                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("link", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "e84acbc0a1a6bf9a7e6c4d4f1f35c16737d256745044", async() => {
+                __tagHelperExecutionContext = __tagHelperScopeManager.Begin("link", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "e84acbc0a1a6bf9a7e6c4d4f1f35c16737d256745487", async() => {
                 }
                 );
                 __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper>();
@@ -101,7 +115,7 @@ using HogeschoolPxl.ViewModels;
             }
             );
             WriteLiteral("\r\n<h3 class=\"cat-heading\">Inschrijvingen</h3>\r\n\r\n");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("vc:inschrijving-menu", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e84acbc0a1a6bf9a7e6c4d4f1f35c16737d256746333", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("vc:inschrijving-menu", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e84acbc0a1a6bf9a7e6c4d4f1f35c16737d256746776", async() => {
             }
             );
             __InschrijvingMenuViewComponentTagHelper = CreateTagHelper<global::AspNetCore.Views_Inschrijving_Index.__Generated__InschrijvingMenuViewComponentTagHelper>();
@@ -123,7 +137,7 @@ using HogeschoolPxl.ViewModels;
 #line hidden
 #nullable disable
             WriteLiteral("        ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("div", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e84acbc0a1a6bf9a7e6c4d4f1f35c16737d256747611", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("div", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "e84acbc0a1a6bf9a7e6c4d4f1f35c16737d256748054", async() => {
             }
             );
             __HogeschoolPxl_TagHelpers_InschrijvingInfoTagHelper = CreateTagHelper<global::HogeschoolPxl.TagHelpers.InschrijvingInfoTagHelper>();

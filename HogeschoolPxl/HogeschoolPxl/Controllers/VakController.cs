@@ -9,9 +9,13 @@ using HogeschoolPxl.Data;
 using HogeschoolPxl.Models;
 using HogeschoolPxl.Helpers;
 using HogeschoolPxl.ViewModels;
+using HogeschoolPxl.Data.Default;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace HogeschoolPxl.Controllers
 {
+    [Authorize(Roles = Roles.StudentRole + "," + Roles.AdminRole + "," + Roles.LectorRole)]
     public class VakController : Controller
     {
         private readonly AppDbContext _context;
@@ -28,7 +32,10 @@ namespace HogeschoolPxl.Controllers
         {
             return View(await iPxl.GetVakken());
         }
-
+        public async Task<IActionResult> LectorVakken()
+        {
+            return View("Index", await iPxl.GetLectorVakken(1));
+        }
         // GET: Vak/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -46,6 +53,7 @@ namespace HogeschoolPxl.Controllers
         }
 
         // GET: Vak/Create
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> Create()
         {
             VakCreateViewModel model = new VakCreateViewModel()
@@ -60,6 +68,7 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> Create([Bind("VakId,VakNaam,Studiepunten,HandboekId")] VakCreateViewModel model)
         {
             model.Handboeken = await iPxl.GetHandboeken();
@@ -83,6 +92,7 @@ namespace HogeschoolPxl.Controllers
         }
 
         // GET: Vak/Edit/5
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -111,6 +121,7 @@ namespace HogeschoolPxl.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> Edit(int id, [Bind("VakId,VakNaam,Studiepunten,HandboekId")] VakEditViewModel model)
         {
             model.Handboeken = await iPxl.GetHandboeken();
@@ -142,6 +153,7 @@ namespace HogeschoolPxl.Controllers
         }
 
         // GET: Vak/Delete/5
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -160,6 +172,7 @@ namespace HogeschoolPxl.Controllers
         // POST: Vak/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = Roles.AdminRole)]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await iPxl.DeleteVak(id);

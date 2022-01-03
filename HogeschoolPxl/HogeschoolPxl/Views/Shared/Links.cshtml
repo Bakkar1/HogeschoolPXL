@@ -1,0 +1,87 @@
+﻿@inject SignInManager<IdentityUser> signInManager;
+@inject IPxl ipxl;
+@using HogeschoolPxl.Data.Default;
+
+<li class="nav-item">
+    <a class="nav-link text-dark" data-link="Home Page" asp-controller="Home" asp-action="Index">Home</a>
+</li>
+
+@if (signInManager.IsSignedIn(User))
+{
+    <li class='nav-item'>
+        @User.Identity.Name
+    </li>
+
+    @if (User.IsInRole(Roles.AdminRole))
+    {
+        <li class='nav-item'>
+            <a class='nav-link text-dark' data-link='Gebruikers' asp-controller='Gebruiker' asp-action='Index'>Gebruikers</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link text-dark' data-link='Vakken' asp-controller='Vak' asp-action='Index'>Vak</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link text-dark' data-link='Lectoren' asp-controller='Lector' asp-action='Index'>Lector</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link text-dark' data-link='VakLectoren' asp-controller='VakLector' asp-action='Index'>VakLector</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link text-dark' data-link='Studenten' asp-controller='Student' asp-action='Index'>Studenten</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link text-dark' data-link='Handboeken' asp-controller='Handboek' asp-action='Index'>Handboek</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link text-dark' data-link='Inschrijvingen' asp-controller='Inschrijving' asp-action='Index'>Inschrijving</a>
+        </li>
+        <li class='nav-item'>
+            <a class='nav-link text-dark' data-link='AcademieJaren' asp-controller='AcademieJaar' asp-action='Index'>AcademieJaar</a>
+        </li>
+    }
+    else if (User.IsInRole(Roles.StudentRole))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" data-link="Vakken" asp-controller="Vak" asp-action="Index">Vak</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" data-link="Handboeken" asp-controller="Handboek" asp-action="Index">Handboek</a>
+        </li>
+    }
+    else if (User.IsInRole(Roles.LectorRole))
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" data-link="Vakken" asp-controller="Vak" asp-action="LectorVakken">Vak</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" data-link="Handboeken" asp-controller="Handboek" asp-action="LectorHandboeken">Handboek</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" data-link="Studenten" asp-controller="Student" asp-action="LectorStudenten">Studenten</a>
+        </li>
+    }
+    <li class="nav-item">
+        <form method="post" asp-controller="account" asp-action="logout">
+            <button type="submit" style="width:auto"
+                    class="nav-link text-dark">
+                Logout
+            </button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" data-link="Register" asp-controller="account" asp-action="register">
+            Register
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" data-link="Login" asp-controller="account" asp-action="login">
+            Login
+        </a>
+    </li>
+}
+<li class="nav-item">
+    <a class="nav-link text-dark" data-link="Portfolio" asp-page="/Portfolio">Portfolio</a>
+</li>

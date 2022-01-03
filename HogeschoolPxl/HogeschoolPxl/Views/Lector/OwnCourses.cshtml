@@ -1,0 +1,18 @@
+﻿@model IEnumerable<VakLector>
+
+<div class="d-flex p-2 flex-wrap">
+    @foreach (var item in Model)
+    {
+        <div class="card m-1">
+            <div class="card-header bg-blue">
+                @item.Vak.VakNaam
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">Studiepunten : @item.Vak.Studiepunten</h5>
+                <p class="card-text">
+                    Boek : <a asp-controller="Handboek" asp-action="Details" asp-route-id="@item.Vak.Handboek.HandboekId">@item.Vak.Handboek.Title</a>
+                </p>
+            </div>
+        </div>
+    }
+</div>

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace HogeschoolPxl.Data.Default
 {
@@ -16,6 +17,77 @@ namespace HogeschoolPxl.Data.Default
                 .ServiceProvider
                 .GetRequiredService<AppDbContext>();
 
+
+            UserManager<IdentityUser> userManager = app.ApplicationServices.CreateScope()
+            .ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+            RoleManager<IdentityRole> roleManager = app.ApplicationServices.CreateScope()
+                .ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+            FillTables(context);
+            
+            CreatIdentityRecord(context, userManager, roleManager);
+
+        }
+        public static async Task CreatIdentityRecord(
+           AppDbContext context,
+           UserManager<IdentityUser> userManager,
+           RoleManager<IdentityRole> roleManager)
+        {
+
+            if (!context.Roles.Any())
+            {
+                await CreateRole(roleManager, Roles.AdminRole);
+                await CreateRole(roleManager, Roles.StudentRole);
+                await CreateRole(roleManager, Roles.LectorRole);
+            }
+
+            var emailStudent = "student@pxl.be";
+            var emailAdmin = "admin@pxl.be";
+
+            if (await userManager.FindByEmailAsync(emailStudent) == null)
+            {
+                var pwd = "Student123!";
+                var indetityUser = new IdentityUser()
+                {
+                    Email = emailStudent,
+                    UserName = emailStudent,
+                };
+                var result = await userManager.CreateAsync(indetityUser, pwd);
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(indetityUser, Roles.StudentRole);
+                }
+            }
+            if (await userManager.FindByEmailAsync(emailAdmin) == null)
+            {
+                var pwd = "Admin456!";
+                var indetityUser = new IdentityUser()
+                {
+                    Email = emailAdmin,
+                    UserName = emailAdmin,
+                };
+                var result = await userManager.CreateAsync(indetityUser, pwd);
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(indetityUser, Roles.AdminRole);
+                }
+            }
+        }
+        private static async Task CreateRole(RoleManager<IdentityRole> roleManager,
+            string role)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                IdentityRole identityRole = new IdentityRole(role);
+                await roleManager.CreateAsync(identityRole);
+            }
+        }
+
+        public static void FillTables(AppDbContext context)
+        {
             if (!context.Gebruikers.Any())
             {
                 context.Gebruikers.AddRange(
@@ -73,7 +145,7 @@ namespace HogeschoolPxl.Data.Default
                     new VakLector()
                     {
                         LectorId = context.Lectoren.Where
-                        (l =>  l.GebruikerId == context.Gebruikers.Where(g => g.Naam == "Palmaers").FirstOrDefault().GebruikerId)
+                        (l => l.GebruikerId == context.Gebruikers.Where(g => g.Naam == "Palmaers").FirstOrDefault().GebruikerId)
                         .FirstOrDefault().LectorId,
                         VakId = context.Vakken.Where(v => v.VakNaam == "C# Web 1").FirstOrDefault().VakId
                     }
@@ -121,7 +193,12 @@ namespace HogeschoolPxl.Data.Default
                 });
                 context.SaveChanges();
             }
-
         }
+    }
+    public static class Roles
+    {
+        public const string AdminRole = "ADMIN";
+        public const string StudentRole = "STUDENT";
+        public const string LectorRole = "LECTOR";
     }
 }
