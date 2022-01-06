@@ -20,7 +20,7 @@ else
                 <span>@lector.Gebruiker.Naam</span>
                 <div class="links">
                     <a asp-action="Edit" asp-route-id="@lector.LectorId" class="btn btn-primary">Edit</a>
-                    <a asp-controller="Gebruiker" asp-action="Details" asp-route-id="@lector.GebruikerId" class="btn btn-info">Details</a>
+                    <a asp-controller="Gebruiker" asp-action="Details" asp-route-id="@lector.Id" class="btn btn-info">Details</a>
                     <a asp-action="Delete" asp-route-id="@lector.LectorId" class="btn btn-danger">Delete</a>
                     <a asp-action="OwnCourses" asp-route-lectorId="@lector.LectorId" class="btn btn-danger">Vakken</a>
                 </div>

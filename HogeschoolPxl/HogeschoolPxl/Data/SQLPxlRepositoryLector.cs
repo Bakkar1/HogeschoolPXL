@@ -60,9 +60,9 @@ namespace HogeschoolPxl.Data
         {
             return _context.Lectoren.Any(e => e.LectorId == id);
         }
-        public async Task<Lector> CheckLector(int gebruikerId)
+        public async Task<Lector> CheckLector(string gebruikerId)
         {
-            return await _context.Lectoren.Where(l => l.GebruikerId == gebruikerId).FirstOrDefaultAsync();
+            return await _context.Lectoren.Where(l => l.Id == gebruikerId).FirstOrDefaultAsync();
         }
     }
 }

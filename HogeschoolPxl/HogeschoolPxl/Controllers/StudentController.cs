@@ -32,9 +32,16 @@ namespace HogeschoolPxl.Controllers
             return View(await iPxl.GetStudenten());
         }
         
-        public async Task<IActionResult> LectorStudenten()
+        public async Task<IActionResult> LectorStudenten(string userName)
         {
-            return View("Index", await iPxl.GetStudenten());
+            var CurrentGberuiker = await iPxl.GetGebruikerByName(userName);
+            var lectorId = 0;
+            if(CurrentGberuiker.lectoren.FirstOrDefault() != null)
+            {
+                lectorId = CurrentGberuiker.lectoren.FirstOrDefault().LectorId;
+            }
+            var model = await iPxl.GetLectorStudenten(lectorId);
+            return View("Index", model);
         } 
 
         // GET: Student/Details/5
@@ -87,27 +94,27 @@ namespace HogeschoolPxl.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Roles.AdminRole)]
-        public async Task<IActionResult> Create([Bind("StudentId,GebruikerId")] StudentCreateViewModel model)
+        public async Task<IActionResult> Create([Bind("StudentId,Id")] StudentCreateViewModel model)
         {
             model.Gebruikers = await iPxl.GetGebruikers();
             if (ModelState.IsValid)
             {
-                bool isStudent = await iPxl.CheckStudent(model.GebruikerId);
+                bool isStudent = await iPxl.CheckStudent(model.Id);
                 if (isStudent)
                 {
-                    ModelState.AddModelError("", $"De Student with gebruiker id {model.GebruikerId} is alredy exist");
+                    ModelState.AddModelError("", $"De Student is alredy exist");
                     return View(model);
                 }
-                var CheckLector = await iPxl.CheckLector(model.GebruikerId);
+                var CheckLector = await iPxl.CheckLector(model.Id);
                 if (CheckLector != null)
                 {
-                    ModelState.AddModelError("", $"Gebruiker with gebruiker id {model.GebruikerId} is a Lector");
+                    ModelState.AddModelError("", $"Gebruiker is a Lector");
                     return View(model);
                 }
 
                 Student student = new Student()
                 {
-                    GebruikerId = model.GebruikerId
+                    Id = model.Id
                 };
                 await iPxl.AddStudent(student);
                 return RedirectToAction(nameof(Index));
@@ -132,7 +139,7 @@ namespace HogeschoolPxl.Controllers
             StudentEditViewModel model = new StudentEditViewModel()
             {
                 StudentId = student.StudentId,
-                GebruikerId = student.GebruikerId,
+                Id = student.Id,
                 Gebruiker = student.Gebruiker,
                 Gebruikers = await iPxl.GetGebruikers()
             };
@@ -145,7 +152,7 @@ namespace HogeschoolPxl.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = Roles.AdminRole)]
-        public async Task<IActionResult> Edit(int id, [Bind("StudentId,GebruikerId")] StudentEditViewModel model)
+        public async Task<IActionResult> Edit(int id, [Bind("StudentId,Id")] StudentEditViewModel model)
         {
             model.Gebruikers = await iPxl.GetGebruikers();
             if (id != model.StudentId)
@@ -153,16 +160,16 @@ namespace HogeschoolPxl.Controllers
                 return RedirecToNotFound();
             }
 
-            bool isStudent = await iPxl.CheckStudent(model.GebruikerId);
+            bool isStudent = await iPxl.CheckStudent(model.Id);
             if (isStudent)
             {
-                ModelState.AddModelError("", $"De Student with gebruiker id {model.GebruikerId} is alredy exist");
+                ModelState.AddModelError("", $"De Student  is alredy exist");
                 return View(model);
             }
-            var CheckLector = await iPxl.CheckLector(model.GebruikerId);
+            var CheckLector = await iPxl.CheckLector(model.Id);
             if (CheckLector != null)
             {
-                ModelState.AddModelError("", $"Gebruiker with gebruiker id {model.GebruikerId} is a Lector");
+                ModelState.AddModelError("", $"De lector is a Lector");
                 return View(model);
             }
 

@@ -1,5 +1,6 @@
 ﻿using HogeschoolPxl.ViewModels;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -37,18 +38,18 @@ namespace HogeschoolPxl.Helpers
             }
             return uniqueFileName;
         }
-        public string ProcessUploadedFile(GebruikerCreateViewModel model)
+        public string ProcessUploadedFile(IFormFile Photo)
         {
             string uniqueFileName = null;
-            if (model.Photo != null)
+            if (Photo != null)
             {
                 string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + Photo.FileName;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                 //upload de image file to the server (images folder)
                 using FileStream fs = new FileStream(filePath, FileMode.Create);
-                model.Photo.CopyTo(fs);
+                Photo.CopyTo(fs);
             }
             return uniqueFileName;
         }

@@ -15,6 +15,22 @@ namespace HogeschoolPxl.Data
         {
             return new SelectList(roleManager.Roles, "Id", "Name");
         }
+        public string GetRoleName(string UserId)
+        {
+            var identityUserRole = _context.UserRoles.Where(us => us.UserId == UserId).FirstOrDefault();
+
+            return identityUserRole == null ? "" : identityUserRole.RoleId;
+        }
+        public void DeleteOldRoles(string UserId)
+        {
+            var userRole =  _context.UserRoles.Where(us => us.UserId == UserId).FirstOrDefault();
+            if(userRole != null)
+            {
+                _context.UserRoles.Remove(userRole);
+                _context.SaveChanges();
+            }
+
+        }
         [ViewContext]
         public ViewContext ViewContext { get; set; }
         public async Task<string> CurrentUserRoleName()

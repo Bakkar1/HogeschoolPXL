@@ -13,15 +13,7 @@ namespace HogeschoolPxl.Data
         {
             return await _context.Vakken.Include(v => v.Handboek).ToListAsync();
         }
-        public async Task<IEnumerable<Vak>> GetLectorVakken(int lectorId)
-        {
-            return await _context.VakLectoren
-                .Include(vl => vl.Vak)
-                .Include(v => v.Vak.Handboek)
-                .Where(vl => vl.LectorId == lectorId)
-                .Select(vl => (Vak)vl.Vak)
-                .ToListAsync();
-        }
+        
 
         public async Task<Vak> GetVak(int? id)
         {

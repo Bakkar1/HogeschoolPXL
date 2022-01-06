@@ -8,14 +8,13 @@ using System.Threading.Tasks;
 
 namespace HogeschoolPxl.Data
 {
-    public class AppDbContext : IdentityDbContext
+    public class AppDbContext : IdentityDbContext<Gebruiker>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) :
             base(options)
         {
 
         }
-        public DbSet<Gebruiker> Gebruikers { get; set; }
         public DbSet<Vak> Vakken{ get; set; }
         public DbSet<Handboek> Handboeken{ get; set; }
         public DbSet<Lector> Lectoren{ get; set; }

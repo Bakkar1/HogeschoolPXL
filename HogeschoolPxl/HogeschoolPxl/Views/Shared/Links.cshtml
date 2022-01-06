@@ -1,4 +1,4 @@
-﻿@inject SignInManager<IdentityUser> signInManager;
+﻿@inject SignInManager<Gebruiker> signInManager;
 @inject IPxl ipxl;
 @using HogeschoolPxl.Data.Default;
 
@@ -8,10 +8,6 @@
 
 @if (signInManager.IsSignedIn(User))
 {
-    <li class='nav-item'>
-        @User.Identity.Name
-    </li>
-
     @if (User.IsInRole(Roles.AdminRole))
     {
         <li class='nav-item'>
@@ -51,13 +47,13 @@
     else if (User.IsInRole(Roles.LectorRole))
     {
         <li class="nav-item">
-            <a class="nav-link text-dark" data-link="Vakken" asp-controller="Vak" asp-action="LectorVakken">Vak</a>
+            <a class="nav-link text-dark" data-link="Vakken" asp-controller="Vak" asp-route-userName="@User.Identity.Name" asp-action="LectorVakken">Vak</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" data-link="Handboeken" asp-controller="Handboek" asp-action="LectorHandboeken">Handboek</a>
+        <li class='nav-item'>
+            <a class='nav-link text-dark' data-link='Studenten' asp-controller='Student' asp-route-userName="@User.Identity.Name"  asp-action='LectorStudenten'>Studenten</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" data-link="Studenten" asp-controller="Student" asp-action="LectorStudenten">Studenten</a>
+        <li class='nav-item'>
+            <a class='nav-link text-dark' data-link='Handboeken' asp-controller='Handboek' asp-route-userName="@User.Identity.Name"  asp-action='LectorHandboeken'>Handboek</a>
         </li>
     }
     <li class="nav-item">

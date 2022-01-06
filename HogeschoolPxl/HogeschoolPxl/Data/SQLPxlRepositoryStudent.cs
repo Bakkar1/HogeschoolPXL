@@ -13,7 +13,14 @@ namespace HogeschoolPxl.Data
         {
             return await _context.Students.Include(s => s.Gebruiker).ToListAsync();
         }
-
+        public async Task<IEnumerable<Student>> GetLectorStudenten(int lectorId)
+        {
+            return await _context.Students
+                .Where(s => s.Inschrijvingen.Where(i => i.VakLector.LectorId == lectorId).Any())
+                .Include(s => s.Gebruiker)
+                .Select(s => s)
+                .ToListAsync();
+        }
         public async Task<Student> GetStudent(int? id)
         {
             return await _context.Students
@@ -66,9 +73,9 @@ namespace HogeschoolPxl.Data
         {
             return _context.Students.Any(e => e.StudentId == id);
         }
-        public async Task<bool> CheckStudent(int gebruikerId)
+        public async Task<bool> CheckStudent(string gebruikerId)
         {
-            var result = await _context.Students.Where(l => l.GebruikerId == gebruikerId).FirstOrDefaultAsync();
+            var result = await _context.Students.Where(l => l.Id == gebruikerId).FirstOrDefaultAsync();
             return result != null;
         }
     }

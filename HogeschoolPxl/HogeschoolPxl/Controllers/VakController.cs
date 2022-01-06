@@ -12,6 +12,7 @@ using HogeschoolPxl.ViewModels;
 using HogeschoolPxl.Data.Default;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Identity;
 
 namespace HogeschoolPxl.Controllers
 {
@@ -20,11 +21,13 @@ namespace HogeschoolPxl.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IPxl iPxl;
+        private readonly UserManager<Gebruiker> userManager;
 
-        public VakController(AppDbContext context, IPxl iPxl)
+        public VakController(AppDbContext context, IPxl iPxl, UserManager<Gebruiker> userManager)
         {
             _context = context;
             this.iPxl = iPxl;
+            this.userManager = userManager;
         }
 
         // GET: Vak
@@ -32,9 +35,15 @@ namespace HogeschoolPxl.Controllers
         {
             return View(await iPxl.GetVakken());
         }
-        public async Task<IActionResult> LectorVakken()
+        public async Task<IActionResult> LectorVakken(string userName)
         {
-            return View("Index", await iPxl.GetLectorVakken(1));
+            var CurrentGberuiker = await iPxl.GetGebruikerByName(userName);
+            var lectorId = 0;
+            if (CurrentGberuiker.lectoren.FirstOrDefault() != null)
+            {
+                lectorId = CurrentGberuiker.lectoren.FirstOrDefault().LectorId;
+            }
+            return View("Index", await iPxl.GetLectorVakken(lectorId));
         }
         // GET: Vak/Details/5
         public async Task<IActionResult> Details(int? id)

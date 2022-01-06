@@ -24,6 +24,7 @@ namespace HogeschoolPxl.Data
 
         public void SeedData()
         {
+            /*
             Gebruikers = new List<Gebruiker>()
             {
                 new Gebruiker()
@@ -103,6 +104,7 @@ namespace HogeschoolPxl.Data
                     StartDatum  = DateTime.Now
                 }
             };
+            */
         }
 
         public async Task<IEnumerable<Gebruiker>> GetGebruikers()

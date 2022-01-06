@@ -11,27 +11,31 @@ namespace HogeschoolPxl.Data.Default
 {
     public class SeedData
     {
-        public static void EnsurePopulated(IApplicationBuilder app)
+        public const string EmailMbark = "mbark.bakkar@pxl.be";
+        public const string EmailKrisotf = "Kristof.Palmaers@pxl.be";
+        public static async void EnsurePopulated(IApplicationBuilder app)
         {
             AppDbContext context = app.ApplicationServices.CreateScope()
                 .ServiceProvider
                 .GetRequiredService<AppDbContext>();
 
 
-            UserManager<IdentityUser> userManager = app.ApplicationServices.CreateScope()
-            .ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            UserManager<Gebruiker> userManager = app.ApplicationServices.CreateScope()
+            .ServiceProvider.GetRequiredService<UserManager<Gebruiker>>();
 
             RoleManager<IdentityRole> roleManager = app.ApplicationServices.CreateScope()
                 .ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            FillTables(context);
             
-            CreatIdentityRecord(context, userManager, roleManager);
+            
+            await CreatIdentityRecord(context, userManager, roleManager);
+
+            await FillTables(context, userManager, roleManager);
 
         }
         public static async Task CreatIdentityRecord(
            AppDbContext context,
-           UserManager<IdentityUser> userManager,
+           UserManager<Gebruiker> userManager,
            RoleManager<IdentityRole> roleManager)
         {
 
@@ -48,10 +52,12 @@ namespace HogeschoolPxl.Data.Default
             if (await userManager.FindByEmailAsync(emailStudent) == null)
             {
                 var pwd = "Student123!";
-                var indetityUser = new IdentityUser()
+                var indetityUser = new Gebruiker()
                 {
                     Email = emailStudent,
                     UserName = emailStudent,
+                    VoorNaam = "default",
+                    Naam = "Student"
                 };
                 var result = await userManager.CreateAsync(indetityUser, pwd);
 
@@ -63,10 +69,12 @@ namespace HogeschoolPxl.Data.Default
             if (await userManager.FindByEmailAsync(emailAdmin) == null)
             {
                 var pwd = "Admin456!";
-                var indetityUser = new IdentityUser()
+                var indetityUser = new Gebruiker()
                 {
                     Email = emailAdmin,
                     UserName = emailAdmin,
+                    VoorNaam = "Admin",
+                    Naam = "Admin"
                 };
                 var result = await userManager.CreateAsync(indetityUser, pwd);
 
@@ -75,37 +83,66 @@ namespace HogeschoolPxl.Data.Default
                     await userManager.AddToRoleAsync(indetityUser, Roles.AdminRole);
                 }
             }
+            if (await userManager.FindByEmailAsync(EmailMbark) == null)
+            {
+                var pwd = "Mbark456!";
+                var indetityUser = new Gebruiker()
+                {
+                    Email = EmailMbark,
+                    UserName = EmailMbark,
+                    Naam = "Bakkar",
+                    VoorNaam = "Mbark"
+                };
+                var result = await userManager.CreateAsync(indetityUser, pwd);
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(indetityUser, Roles.StudentRole);
+                }
+            }
+            if (await userManager.FindByEmailAsync(EmailKrisotf) == null)
+            {
+                var pwd = "Kristof456!";
+                var indetityUser = new Gebruiker()
+                {
+                    Email = EmailKrisotf,
+                    UserName = EmailKrisotf,
+                    Naam = "Palmaers",
+                    VoorNaam = "Kristof"
+                };
+                var result = await userManager.CreateAsync(indetityUser, pwd);
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(indetityUser, Roles.LectorRole);
+                }
+            }
         }
         private static async Task CreateRole(RoleManager<IdentityRole> roleManager,
             string role)
         {
-            if (!await roleManager.RoleExistsAsync(role))
+            try
             {
-                IdentityRole identityRole = new IdentityRole(role);
-                await roleManager.CreateAsync(identityRole);
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    IdentityRole identityRole = new IdentityRole(role);
+                    await roleManager.CreateAsync(identityRole);
+                }
             }
+            catch (Exception exp)
+            {
+
+                throw;
+            }
+
         }
 
-        public static void FillTables(AppDbContext context)
+        public static async Task FillTables(AppDbContext context, UserManager<Gebruiker> userManager,
+           RoleManager<IdentityRole> roleManager)
         {
-            if (!context.Gebruikers.Any())
-            {
-                context.Gebruikers.AddRange(
-                    new Gebruiker()
-                    {
-                        Naam = "Bakkar",
-                        VoorNaam = "Mbark",
-                        Email = "mbark.bakkar@pxl.be"
-                    },
-                    new Gebruiker()
-                    {
-                        Naam = "Palmaers",
-                        VoorNaam = "Kristof",
-                        Email = "Kristof.Palmaers@pxl.be"
-                    }
-                );
-                context.SaveChanges();
-            }
+            var mbarkIdentity = await userManager.FindByEmailAsync(EmailMbark);
+            var kristofIdentity = await userManager.FindByEmailAsync(EmailKrisotf);
+            
             if (!context.Handboeken.Any())
             {
                 context.Handboeken.AddRange(
@@ -122,7 +159,7 @@ namespace HogeschoolPxl.Data.Default
                 context.Lectoren.AddRange(
                     new Lector()
                     {
-                        GebruikerId = context.Gebruikers.Where(g => g.Naam == "Palmaers").FirstOrDefault().GebruikerId,
+                        Id = kristofIdentity.Id,
                     }
                 );
                 context.SaveChanges();
@@ -145,8 +182,7 @@ namespace HogeschoolPxl.Data.Default
                     new VakLector()
                     {
                         LectorId = context.Lectoren.Where
-                        (l => l.GebruikerId == context.Gebruikers.Where(g => g.Naam == "Palmaers").FirstOrDefault().GebruikerId)
-                        .FirstOrDefault().LectorId,
+                        (l => l.Id == kristofIdentity.Id).FirstOrDefault().LectorId,
                         VakId = context.Vakken.Where(v => v.VakNaam == "C# Web 1").FirstOrDefault().VakId
                     }
                 );
@@ -157,7 +193,7 @@ namespace HogeschoolPxl.Data.Default
                 context.Students.AddRange(
                     new Student()
                     {
-                        GebruikerId = context.Gebruikers.Where(g => g.Naam == "Bakkar").FirstOrDefault().GebruikerId
+                        Id = mbarkIdentity.Id
                     }
                 );
                 context.SaveChanges();
@@ -178,12 +214,12 @@ namespace HogeschoolPxl.Data.Default
                 new Inschrijving()
                 {
                     StudentId = context.Students.Where
-                             (s => s.GebruikerId == context.Gebruikers.Where(g => g.Naam == "Bakkar").FirstOrDefault().GebruikerId)
+                             (s => s.Id == mbarkIdentity.Id)
                              .FirstOrDefault().StudentId,
                     VakLectorId = context.VakLectoren.Where
                              (
                                  vk =>
-                                 (vk.LectorId == context.Lectoren.Where(l => l.GebruikerId == context.Gebruikers.Where(g => g.Naam == "Palmaers").FirstOrDefault().GebruikerId).FirstOrDefault().LectorId
+                                 (vk.LectorId == context.Lectoren.Where(l => l.Id == kristofIdentity.Id).FirstOrDefault().LectorId
                                  &&
                                  vk.VakId == context.Vakken.Where(v => v.VakNaam == "C# Web 1").FirstOrDefault().VakId)
 
@@ -193,6 +229,7 @@ namespace HogeschoolPxl.Data.Default
                 });
                 context.SaveChanges();
             }
+            
         }
     }
     public static class Roles

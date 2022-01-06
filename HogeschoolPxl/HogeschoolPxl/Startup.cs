@@ -12,6 +12,7 @@ using HogeschoolPxl.Data;
 using Microsoft.EntityFrameworkCore;
 using HogeschoolPxl.Data.Default;
 using Microsoft.AspNetCore.Identity;
+using HogeschoolPxl.Models;
 
 namespace HogeschoolPxl
 {
@@ -34,7 +35,7 @@ namespace HogeschoolPxl
             services.AddRazorPages();
             services.AddScoped<IPxl, PartialSQLPxlRepository>();
 
-            services.AddIdentity<IdentityUser, IdentityRole>(
+            services.AddIdentity<Gebruiker, IdentityRole>(
                 options =>
                 {
                     options.Password.RequireDigit = true;

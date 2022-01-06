@@ -34,9 +34,16 @@ namespace HogeschoolPxl.Controllers
         {
             return View(await iPxl.GetHandboeken());
         }
-        public async Task<IActionResult> LectorHandboeken()
+        public async Task<IActionResult> LectorHandboeken(string userName)
         {
-            return View("Index", await iPxl.GetHandboeken());
+            var CurrentGberuiker = await iPxl.GetGebruikerByName(userName);
+            var lectorId = 0;
+            if (CurrentGberuiker.lectoren.FirstOrDefault() != null)
+            {
+                lectorId = CurrentGberuiker.lectoren.FirstOrDefault().LectorId;
+            }
+
+            return View("Index", await iPxl.GetLectorHandboeken(lectorId));
         }
 
         // GET: Handboek/Details/5

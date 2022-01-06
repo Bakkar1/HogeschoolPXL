@@ -1,7 +1,10 @@
 ﻿using HogeschoolPxl.Data;
 using HogeschoolPxl.Data.Default;
+using HogeschoolPxl.Helpers;
+using HogeschoolPxl.Models;
 using HogeschoolPxl.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,47 +17,51 @@ namespace HogeschoolPxl.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> userManager;
-        private readonly SignInManager<IdentityUser> singInManager;
+        private readonly UserManager<Gebruiker> userManager;
+        private readonly SignInManager<Gebruiker> singInManager;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly IPxl iPxl;
+        private readonly IWebHostEnvironment HostEnvironment;
 
-        public AccountController(UserManager<IdentityUser> userManager,
-             SignInManager<IdentityUser> singInManager,
+        public AccountController(UserManager<Gebruiker> userManager,
+             SignInManager<Gebruiker> singInManager,
              RoleManager<IdentityRole> roleManager,
-             IPxl iPxl)
+             IPxl iPxl,
+             IWebHostEnvironment hostEnvironment)
         {
             this.userManager = userManager;
             this.singInManager = singInManager;
             this.iPxl = iPxl;
+            this.HostEnvironment = hostEnvironment;
             this.roleManager = roleManager;
         }
 
         #region register
         public IActionResult Register()
         {
-            ViewData["RoleId"] = iPxl.GetRoles();
             return View();
         }
         [HttpPost]
-        public async Task<IActionResult> RegisterAsync(RegisterViewModel user)
+        public async Task<IActionResult> RegisterAsync(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var identityUser = new IdentityUser
+                FotoHelper ft = new FotoHelper(HostEnvironment);
+                string uniqueFileName = ft.ProcessUploadedFile(model.Photo);
+
+                var identityUser = new Gebruiker()
                 {
-                    UserName = user.Email,
-                    Email = user.Email,
+                    Naam = model.Naam,
+                    VoorNaam = model.VoorNaam,
+                    Email = model.Email,
+                    UserName = model.Email,
+                    ImageUrl = uniqueFileName,
                 };
-                var result = await userManager.CreateAsync(identityUser, user.Password);
+
+                var result = await userManager.CreateAsync(identityUser, model.Password);
 
                 if (result.Succeeded)
                 {
-                    var role = await roleManager.FindByIdAsync(user.RoleId);
-                    if (role != null)
-                    {
-                        await userManager.AddToRoleAsync(identityUser, role.Name);
-                    }
                     await singInManager.SignInAsync(identityUser, isPersistent: false);
                     return RedirectToAction("index", "Home");
                 }
@@ -63,7 +70,7 @@ namespace HogeschoolPxl.Controllers
                     ModelState.AddModelError("", error.Description);
                 }
             }
-            return View();
+            return View(model);
         }
         #endregion
         #region LogOut
