@@ -35,6 +35,11 @@ namespace HogeschoolPxl.Controllers
             this.HostEnvironment = hostEnvironment;
             this.roleManager = roleManager;
         }
+        public async Task<IActionResult> Profile(string userName)
+        {
+            var CurrentGberuiker = await iPxl.GetGebruikerByName(userName);
+            return View(CurrentGberuiker);
+        }
 
         #region register
         public IActionResult Register()

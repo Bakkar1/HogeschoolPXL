@@ -50,12 +50,17 @@
             <a class="nav-link text-dark" data-link="Vakken" asp-controller="Vak" asp-route-userName="@User.Identity.Name" asp-action="LectorVakken">Vak</a>
         </li>
         <li class='nav-item'>
-            <a class='nav-link text-dark' data-link='Studenten' asp-controller='Student' asp-route-userName="@User.Identity.Name"  asp-action='LectorStudenten'>Studenten</a>
+            <a class='nav-link text-dark' data-link='Studenten' asp-controller='Student' asp-route-userName="@User.Identity.Name" asp-action='LectorStudenten'>Studenten</a>
         </li>
         <li class='nav-item'>
-            <a class='nav-link text-dark' data-link='Handboeken' asp-controller='Handboek' asp-route-userName="@User.Identity.Name"  asp-action='LectorHandboeken'>Handboek</a>
+            <a class='nav-link text-dark' data-link='Handboeken' asp-controller='Handboek' asp-route-userName="@User.Identity.Name" asp-action='LectorHandboeken'>Handboek</a>
         </li>
     }
+    <li class="nav-item">
+        <a class="nav-link text-dark" data-link="Profile" asp-controller="account" asp-route-userName="@User.Identity.Name" asp-action="profile">
+            Profile
+        </a>
+    </li>
     <li class="nav-item">
         <form method="post" asp-controller="account" asp-action="logout">
             <button type="submit" style="width:auto"

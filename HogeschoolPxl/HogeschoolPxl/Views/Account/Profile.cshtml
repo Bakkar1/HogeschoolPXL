@@ -1,0 +1,19 @@
+﻿@model Gebruiker;
+@{
+    ViewData["Title"] = "Profile";
+    var photoPath = "/images/" + (Model.ImageUrl ?? "avatar.png");
+}
+<div class="d-flex justify-content-center p-2" >
+    <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="@photoPath" alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Naam @Model.VoorNaam</h5>
+            <p class="card-text">@Model.Email</p>
+            <div>
+                <a asp-controller="Gebruiker" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+

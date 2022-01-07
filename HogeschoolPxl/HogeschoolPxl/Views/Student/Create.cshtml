@@ -11,7 +11,7 @@
     <form asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="Id">Tekomstige Lector</label>
+            <label asp-for="Id">Tekomstige Student</label>
             <select asp-for="Id" class="form-control">
                 <option value="">Please Select</option>
                 @foreach (Gebruiker gebruiker in Model.Gebruikers)
