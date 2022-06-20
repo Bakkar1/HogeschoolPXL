@@ -13,6 +13,7 @@ namespace HogeschoolPxl.ViewModels
         public IFormFile Photo { get; set; }
         public string RoleId { get; set; }
         [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
     }
 }

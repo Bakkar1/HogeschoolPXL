@@ -189,11 +189,11 @@ namespace HogeschoolPxl.Controllers
             return View(model);
         }
 
-        public async Task UpdateRoles(Gebruiker identityUser, string roleName)
+        public async Task UpdateRoles(Gebruiker identityUser, string roleId)
         {
             iPxl.DeleteOldRoles(identityUser.Id);
 
-            var role = await roleManager.FindByIdAsync(roleName);
+            var role = await roleManager.FindByIdAsync(roleId);
             if (role != null)
             {
                 await userManager.AddToRoleAsync(identityUser, role.Name);
